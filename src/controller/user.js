@@ -1,6 +1,7 @@
 import { User, Collection, Group } from "../models/index.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { sendEmailNow } from "../helper/sendEmail.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -52,6 +53,114 @@ export default {
       res.status(200).send({ msg: "Logged in successfully", token });
     } catch (error) {
       res.status(500).send({ error: error.message });
+    }
+  },
+
+  //reset password
+  resetPasswordRequest: async (req, res) => {
+    try {
+      var code = await Math.floor(1000 + Math.random() * 9000);
+      const user = await User.findOne({ email: req.body.email });
+      if (!user) {
+        return res.send({
+          msg: "User not found",
+        });
+      }
+      user.resetCode = code;
+      user.resetCodeExpirationTime = Date.now() + 3600000;
+      await user.save();
+
+      const from = "faheemuhammad320@gmail.com";
+      const subject = "Password Reset Request";
+      const html = `<div>
+		<h3>Password Reset Request Received for the email <span style="color:blue">${user.email} </span> </h3>
+		<p>Please avoid this if you did not make a password reset request</p>
+		<p>if you have requested the password reset then please use the 4 Digit code below</p>
+		<h1 style="text-align:center; color:grey">Code:${code}</h1>
+		<hr>
+		<h3 style ='color:red' > this will expire in 30 minuts </h3>
+	</div>
+		`;
+
+      //send email now
+      sendEmailNow(user.email, from, subject, html);
+      res.send({
+        msg: "Please check your email",
+      });
+    } catch (error) {
+      res.status(400).send({
+        msg: "something went wrong",
+      });
+    }
+  },
+
+  //verify reset code
+  verifyCode: async (req, res) => {
+    try {
+      // authenticateUser(request);
+      const code = req.body.code;
+
+      const user = await User.findOne({
+        resetCode: code,
+        resetCodeExpirationTime: { $gt: Date.now() },
+        // _id: userId
+      });
+      if (!user) {
+        return res.status(200).send({ msg: "Invalid token" });
+      }
+      res
+        .status(200)
+        .send({ userId: user._id.toString(), data: { code: code } });
+
+      //redicret the user to login page
+    } catch (error) {
+      res.status(400).send({
+        msg: "something went wrong",
+      });
+    }
+  },
+
+  //new password
+  newPassword: async (req, res) => {
+    try {
+      const { password, userId, code } = req.body;
+      const user = await User.findOne({
+        resetCode: code,
+        resetCodeExpirationTime: { $gt: Date.now() },
+        _id: userId,
+      });
+      if (!user) {
+        return res.status(200).send({
+          msg: "Invalid code",
+        });
+      }
+
+      const hashedPassword = await bcryptjs.hash(password, 10);
+      user.password = hashedPassword;
+      user.resetCode = undefined;
+      user.resetCodeExpirationTime = undefined;
+      await user.save();
+
+      //send email
+      const from = "faheemuhammad320@gmail.com";
+      const subject = "password changed";
+      const html = `
+		<div>
+			<h2> Dear <span style = "color:blue">${user.email}</span> </h2>
+			<hr>
+			<h3>Password changed for the email <span style="color:blue">${user.email} </span> </h3>
+		</div>
+			`;
+      sendEmailNow(user.email, from, subject, html);
+      res.send({
+        msg: `Dear ${
+          user.name ? user.name : user.email
+        } password changed successfully`,
+      });
+    } catch (error) {
+      res.status(400).send({
+        msg: "something went wrong",
+      });
     }
   },
 
@@ -113,6 +222,21 @@ export default {
       return res.status(200).json(group);
     } catch (error) {
       return res.status(500).json({ error: error.message });
+    }
+  },
+
+  // ################################### Collections
+  addCollection: async (req, res) => {
+    try {
+      const { body } = req;
+      const exists = await Collection.findOne({ name: body.name });
+      if (exists) {
+        return res.status(400).json({ msg: "Collection already exists" });
+      }
+      const collection = await Collection.create(body);
+      return res.status(201).json(collection);
+    } catch (error) {
+      return res.status(500).send({ error: error.message });
     }
   },
 

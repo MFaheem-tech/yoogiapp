@@ -25,9 +25,17 @@ router.post(
 
 router.post("/register", userController.register);
 router.post("/login", userController.login);
+router.post("/password-reset", userController.resetPasswordRequest);
+router.post("/verify-reset-code", userController.verifyCode);
+router.post("/new-password", userController.newPassword);
+
 router.post("/group", userController.createGroup);
 router.get("/group", userController.viewGroup);
 router.get("/group/:id", userController.viewGroupDetails);
 router.put("/group/:id", userController.editGroup);
 router.delete("/group/:id", userController.deleteGroup);
+
+// collection
+router.post("/collection", userController.addCollection);
+
 export default router;
