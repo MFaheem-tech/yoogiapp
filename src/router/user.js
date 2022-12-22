@@ -29,6 +29,9 @@ router.post("/password-reset", userController.resetPasswordRequest);
 router.post("/verify-reset-code", userController.verifyCode);
 router.post("/new-password", userController.newPassword);
 
+router.post("/choose-purpose", userController.choosePurpose);
+router.get("/choose-purpose", userController.getChoosePurpose);
+
 router.post("/group", userController.createGroup);
 router.get("/group", userController.viewGroup);
 router.get("/group/:id", userController.viewGroupDetails);
@@ -37,5 +40,7 @@ router.delete("/group/:id", userController.deleteGroup);
 
 // collection
 router.post("/collection", userController.addCollection);
+router.get("/collection", userController.viewCollection);
+router.put("/collection/:id", userController.editCollection);
 
 export default router;

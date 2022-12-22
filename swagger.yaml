@@ -1,0 +1,388 @@
+openapi: 3.0.2
+info:
+  title: YOOGI APIS DOCS
+  description: This is a sample APIS doc for the Yoogi app consisting of the ADMIN and CUSTOMER End points
+
+servers:
+  - url: http://localhost:3000/api/v1
+tags:
+  - name: ADMIN
+    description: All endpoints about ADMIN
+  - name: CUSTOMER
+    description: All endpoints about CUSTOMER
+paths:
+  ###### CUSTOMER
+  /users/register:
+    post:
+      tags:
+        - CUSTOMER
+      summary: New user  Registration.
+      description: sign up for new account .
+      requestBody:
+        description: Creating a new user
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerAuth"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/CustomerAuth"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/CustomerAuth"
+        required: true
+      responses:
+        "200": # status code
+          description: New user created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400": # status code
+          description: E-mail is incorrect
+          content:
+            application/json:
+              schema:
+                type": string
+                example: E-mail  is incorrect\
+  /users/login:
+    post:
+      tags:
+        - CUSTOMER
+      summary: Customer login.
+      description: sign in for an existing account.
+      requestBody:
+        description: login
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerAuth"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/CustomerAuth"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/CustomerAuth"
+        required: true
+      responses:
+        "202": # status code
+          description: logged in successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400": # status code
+          description: phone number is incorrect
+          content:
+            application/json:
+              schema:
+                type": string
+                example: email or password is incorrect
+  /users/password-reset:
+    post:
+      tags:
+        - CUSTOMER
+      summary: Reset password using email.
+      description: Reset your password.
+      requestBody:
+        description: give existing email to reset password
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerAuth"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/CustomerAuth"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/CustomerAuth"
+        required: true
+      responses:
+        "202": # status code
+          description: success operation.. Kindly check your email.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400": # status code
+          description: email not  exists
+          content:
+            application/json:
+              schema:
+                type": string
+                example: email not exists.
+  /users/verify-reset-code:
+    post:
+      tags:
+        - CUSTOMER
+      summary: Verify reset password code .
+      description: Verify reset password code.
+      requestBody:
+        description: Verify reset password code .
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerifyCOde"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/VerifyCOde"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/VerifyCOde"
+        required: true
+      responses:
+        "202": # status code
+          description: success operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VerifyCOdeExample"
+        "400": # status code
+          description: email not  exists
+          content:
+            application/json:
+              schema:
+                type": string
+                example: email not exists.
+  /users/new-password:
+    post:
+      tags:
+        - CUSTOMER
+      summary: Enter new password  .
+      description: Enter new password.
+      requestBody:
+        description: Enter new password, code, or user id  .
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewPassword"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/NewPassword"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/NewPassword"
+        required: true
+      responses:
+        "202": # status code
+          description: Dear user, your password changed successfully
+        "400": # status code
+          description: email not  exists
+          content:
+            application/json:
+              schema:
+                type": string
+                example: email not exists.
+  /users/group:
+    post:
+      tags:
+        - CUSTOMER
+      summary: Add new Group
+      description: Call this api to add new Group.
+      operationId: createGroup
+      requestBody:
+        description: Creating a new Group
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Group"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/Group"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Group"
+        required: true
+      responses:
+        "201": # status code
+          description: This return the created Group
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+        "400": # status code
+          description: Group already exist.
+
+        "403": # status code
+          description: UnAuthorized Acess Denied
+    get:
+      tags:
+        - CUSTOMER
+      summary: view all groups.
+      description: call this api to view all groups.
+      responses:
+        "200": # status code
+          description: return array of groups
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+        "400": # status code
+          description: UnAuthorized Access Denied
+  /users/group/{id}:
+    get:
+      tags:
+        - CUSTOMER
+      summary: View group details
+      description: call this api to view group details
+      parameters:
+        - name: id
+          in: path
+          description: id is required
+          required: true
+          schema:
+            type: string
+            example: 631b0b88970b8b1d149f61d6
+      responses:
+        default:
+          description: successful operation
+    put:
+      tags:
+        - CUSTOMER
+      summary: Edit group
+      description: call this api to edit group
+      parameters:
+        - name: id
+          in: path
+          description: id is required
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Edit group
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Group"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/Group"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Group"
+      responses:
+        default:
+          description: successful operation
+
+components:
+  schemas:
+    CustomerAuth:
+      type: object
+      properties:
+        email:
+          type: string
+          example: john@gmail.com
+        password:
+          type: string
+          example: a*************
+        name:
+          type: string
+          example: abc
+    VerifyCOde:
+      type: object
+      properties:
+        code:
+          type: string
+          example: 1122
+    VerifyCOdeExample:
+      type: object
+      properties:
+        code:
+          type: string
+          example: 1122
+        token:
+          type: string
+          example: yJhbGciOiJIUzI1Ni.....zDWo1PgegvWGHZG1w83o
+    NewPassword:
+      type: object
+      properties:
+        password:
+          type: string
+          example: a******
+        confirmPassword:
+          type: string
+          example: a******
+        code:
+          type: string
+          example: 1122
+        userId:
+          type: string
+          example: zDWo1PgegvWGHZG1w83o
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+          example: john
+        email:
+          type: string
+          example: john@example.com
+        password:
+          type: string
+    Group:
+      type: object
+      properties:
+        name:
+          type: string
+          example: myGrandson
+        displayPicture:
+          type: string
+          example: john.jpg
+        members:
+          type: array
+          description: "Enter the e-mails"
+          example: [faheem@gmail.com, ali@gmail.com]
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+
+  requestBodies:
+    CustomerAuth:
+      description: Customer
+      content:
+        application/json:
+          schema:
+            items:
+              $ref: "#/components/schemas/CustomerAuth"
+    VerifyCOde:
+      description: Customer
+      content:
+        application/json:
+          schema:
+            items:
+              $ref: "#/components/schemas/VerifyCOde"
+    VerifyCOdeExample:
+      description: Customer
+      content:
+        application/json:
+          schema:
+            items:
+              $ref: "#/components/schemas/VerifyCOdeExample"
+    NewPassword:
+      description: Customer
+      content:
+        application/json:
+          schema:
+            items:
+              $ref: "#/components/schemas/NewPassword"
+    User:
+      description: User
+      content:
+        application/json:
+          schema:
+            items:
+              $ref: "#/components/schemas/User"
+    Group:
+      description: Group
+      content:
+        application/json:
+          schema:
+            items:
+              $ref: "#/components/schemas/Group"

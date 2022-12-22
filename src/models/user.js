@@ -15,10 +15,6 @@ const userSchema = new Schema(
       max: 64,
       trim: true,
     },
-    phone: {
-      type: Number,
-      unique: true,
-    },
     password: {
       type: String,
       max: 256,

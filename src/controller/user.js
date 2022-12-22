@@ -1,4 +1,10 @@
-import { User, Collection, Group } from "../models/index.js";
+import {
+  User,
+  Collection,
+  Group,
+  Category,
+  ShareFile,
+} from "../models/index.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { sendEmailNow } from "../helper/sendEmail.js";
@@ -163,6 +169,29 @@ export default {
       });
     }
   },
+  choosePurpose: async (req, res) => {
+    try {
+      const { body } = req;
+      const exists = await Category.findOne({
+        categoryName: body.categoryName,
+      });
+      if (exists) {
+        return res.status(400).json({ msg: "Category already exists" });
+      }
+      const purpose = await Category.create(req.body);
+      return res.status(200).json(purpose);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
+  getChoosePurpose: async (req, res) => {
+    try {
+      const purpose = await Category.find();
+      return res.status(200).json(purpose);
+    } catch (error) {
+      return res.status(500).send({ error: error.message });
+    }
+  },
 
   // ################################### Groups
   createGroup: async (req, res) => {
@@ -237,6 +266,36 @@ export default {
       return res.status(201).json(collection);
     } catch (error) {
       return res.status(500).send({ error: error.message });
+    }
+  },
+
+  viewCollection: async (req, res) => {
+    try {
+      const details = await Collection.find();
+      return res.status(200).json(details);
+    } catch (error) {
+      return res.status(500).send({ error: error.message });
+    }
+  },
+
+  editCollection: async (req, res) => {
+    try {
+      const { body } = req;
+      const updateCollection = await Collection.findByIdAndUpdate(
+        {
+          _id: req.params.id,
+        },
+        {
+          $set: body,
+        },
+        {
+          new: true,
+        }
+      );
+
+      return res.status(200).json(updateCollection);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
     }
   },
 
