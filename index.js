@@ -8,11 +8,11 @@ import Router from "./src/router/index.js";
 import { errorHandler } from "./src/middleware/errorHandler.js";
 
 // ###### swagger
-import path from 'path';
+import path from "path";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 
-const swaggerDocument = YAML.load("./swagger.yaml");
+const swaggerDocument = YAML.load("swagger.yaml");
 
 config();
 
