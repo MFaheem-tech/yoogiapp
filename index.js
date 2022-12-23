@@ -26,7 +26,11 @@ const options = {
 const app = express();
 
 //  ## Server Swagger Ui
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument, options)
+);
 
 app.use(morgan("dev"));
 app.use(cors());
