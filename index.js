@@ -12,7 +12,9 @@ import path from "path";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 
-const swaggerDocument = YAML.load("swagger.yaml");
+const swaggerDocument = YAML.load("./swagger.yaml");
+// var swagger_path = path.resolve("./swagger.yaml");
+// console.log(swagger_path);
 
 config();
 
@@ -24,11 +26,7 @@ const options = {
 const app = express();
 
 //  ## Server Swagger Ui
-app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerDocument, options)
-);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(morgan("dev"));
 app.use(cors());
