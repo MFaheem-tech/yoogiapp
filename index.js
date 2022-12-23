@@ -42,8 +42,8 @@ try {
   });
 
   const port = process.env.PORT || 5000;
-  // const host = "localhost";
-  const host = "192.168.18.72";
+  const host = "localhost";
+  // const host = "192.168.18.72";
 
   app.listen(port, () => {
     console.log(`app is running http://${host}:${port}`);
