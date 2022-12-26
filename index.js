@@ -36,18 +36,20 @@ app.use(morgan("dev"));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+const port = process.env.PORT || 5000;
+const host = "yoogi.cyclic.app" || "localhost";
+// const host = "192.168.18.72";
+
 try {
   connect();
-  app.use(errorHandler);
-  app.use("/api/v1", Router);
+
   app.get("/", (req, res) => {
     res.send("api is running successfully");
   });
+  app.use("/api/v1", Router);
 
-  const port = process.env.PORT || 5000;
-  const host = "localhost";
-  // const host = "192.168.18.72";
-
+  app.use(errorHandler);
   app.listen(port, () => {
     console.log(`app is running http://${host}:${port}`);
   });
