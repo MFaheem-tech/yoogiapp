@@ -4,7 +4,8 @@ info:
   description: This is a sample APIS doc for the Yoogi app consisting of the ADMIN and CUSTOMER End points
 
 servers:
-  - url: http://localhost:3000/api/v1
+  - url: http://localhost:8080/api/v1
+  - url: https://yoogi.cyclic.app/api/v1
 
 tags:
   - name: ADMIN
@@ -45,7 +46,7 @@ paths:
             application/json:
               schema:
                 type": string
-                example: E-mail  is incorrect\
+                example: E-mail  is incorrect
   /users/login:
     post:
       tags:
@@ -264,7 +265,96 @@ paths:
       responses:
         default:
           description: successful operation
+  /users/collection:
+    post:
+      tags:
+        - CUSTOMER
+      summary: Add new collection
+      description: Call this api to add new collection.
+      operationId: createCollection
+      requestBody:
+        description: Creating a new collection
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Collection"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/Collection"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Collection"
+        required: true
+      responses:
+        "201": # status code
+          description: This return the created collection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Collection"
+        "400": # status code
+          description: Collection already exist.
 
+        "403": # status code
+          description: UnAuthorized Acess Denied
+    get:
+      tags:
+        - CUSTOMER
+      summary: view all collections.
+      description: call this api to view all collections.
+      responses:
+        "200": # status code
+          description: return array of collections
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Collection"
+        "400": # status code
+          description: UnAuthorized Access Denied
+  /users/collection/{id}:
+    get:
+      tags:
+        - CUSTOMER
+      summary: View collection details
+      description: call this api to view collection details
+      parameters:
+        - name: id
+          in: path
+          description: id is required
+          required: true
+          schema:
+            type: string
+            example: 631b0b88970b8b1d149f61d6
+      responses:
+        default:
+          description: successful operation
+    put:
+      tags:
+        - CUSTOMER
+      summary: Edit collection
+      description: call this api to edit collection
+      parameters:
+        - name: id
+          in: path
+          description: id is required
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Edit collection
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Collection"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/Collection"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Collection"
+      responses:
+        default:
+          description: successful operation
 components:
   schemas:
     CustomerAuth:
@@ -333,6 +423,37 @@ components:
           type: array
           description: "Enter the e-mails"
           example: [faheem@gmail.com, ali@gmail.com]
+    Collection:
+      type: object
+      properties:
+        name:
+          type: string
+          example: myGrandson
+        displayPicture:
+          type: string
+          example: abc.jpg
+        backgroundPicture:
+          type: string
+          example: background.jpg
+        members:
+          type: array
+          description: "Enter the e-mails"
+          example: [faheem@gmail.com, ali@gmail.com]
+        tags:
+          type: array
+          example: [tag1, tag2]
+        group:
+          type: array
+          example: [tag1, tag2]
+        whenStart:
+          type: string
+          example: 24/12/2022
+        share:
+          type: boolean
+          example: false
+        files:
+          type: string
+          example: abc.pdf
     ApiResponse:
       type: object
       properties:
@@ -387,3 +508,10 @@ components:
           schema:
             items:
               $ref: "#/components/schemas/Group"
+    Collection:
+      description: Collection
+      content:
+        application/json:
+          schema:
+            items:
+              $ref: "#/components/schemas/Collection"

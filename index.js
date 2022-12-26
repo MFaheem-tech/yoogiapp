@@ -8,29 +8,26 @@ import Router from "./src/router/index.js";
 import { errorHandler } from "./src/middleware/errorHandler.js";
 
 // ###### swagger
-import path from "path";
-// import swaggerUi from "swagger-ui-express";
-// import YAML from "yamljs";
+import swaggerUi from "swagger-ui-express";
+import YAML from "yamljs";
 
-// const swaggerDocument = YAML.load("./swagger.yaml");
-// var swagger_path = path.resolve("./swagger.yaml");
-// console.log(swagger_path);
+const swaggerDocument = YAML.load("./swagger.yaml");
 
 config();
 
-// const options = {
-//   customCss: ".swagger-ui .topbar { display : none }",
-//   customSiteTitle: "Yoogi",
-// };
+const options = {
+  customCss: ".swagger-ui .topbar { display : none }",
+  customSiteTitle: "Yoogi",
+};
 
 const app = express();
 
 //  ## Server Swagger Ui
-// app.use(
-//   "/api-docs",
-//   swaggerUi.serve,
-//   swaggerUi.setup(swaggerDocument, options)
-// );
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument, options)
+);
 
 app.use(morgan("dev"));
 app.use(cors());
