@@ -4,17 +4,14 @@ import { config } from "dotenv";
 config();
 
 const connect = () => {
-  mongoose.set("strictQuery", true);
+  mongoose.set("strictQuery", false);
   mongoose
-    .connect("mongodb://localhost/yoogi", {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    })
+    .connect(process.env.MONGO_URI)
     .then(() => {
       console.log("DB connected successfully");
     })
     .catch((err) => {
-      console.log(err.message);
+      console.log(err);
     });
 };
 
