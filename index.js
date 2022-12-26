@@ -42,14 +42,13 @@ const host = "yoogi.cyclic.app" || "localhost";
 // const host = "192.168.18.72";
 
 try {
-  connect();
-
   app.get("/", (req, res) => {
     res.send("api is running successfully");
   });
   app.use("/api/v1", Router);
 
   app.use(errorHandler);
+  connect();
   app.listen(port, () => {
     console.log(`app is running http://${host}:${port}`);
   });
