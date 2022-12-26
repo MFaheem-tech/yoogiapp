@@ -23,11 +23,11 @@ const options = {
 const app = express();
 
 //  ## Server Swagger Ui
-app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerDocument, options)
-);
+// app.use(
+//   "/api-docs",
+//   swaggerUi.serve,
+//   swaggerUi.setup(swaggerDocument, options)
+// );
 
 app.use(morgan("dev"));
 app.use(cors());
@@ -36,13 +36,17 @@ app.use(express.urlencoded({ extended: false }));
 
 const port = process.env.PORT || 5000;
 const host = "yoogi.cyclic.app" || "localhost";
-// const host = "192.168.18.72";
 
 try {
   app.get("/", (req, res) => {
     res.send("api is running successfully");
   });
   app.use("/api/v1", Router);
+  app.use(
+    "/api-docs",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerDocument, options)
+  );
 
   app.use(errorHandler);
   connect();
