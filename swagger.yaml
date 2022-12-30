@@ -47,6 +47,51 @@ paths:
               schema:
                 type": string
                 example: E-mail  is incorrect
+  /users/choose-purpose:
+    post:
+      tags:
+        - CUSTOMER
+      summary: Choose purpose of your  account
+      description: Call this api to add choose purpose of account.
+      requestBody:
+        description: Creating a choose purpose
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Category"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/Category"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Category"
+        required: true
+      responses:
+        "201": # status code
+          description: This return the created purpose
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+        "400": # status code
+          description: Purpose already exist.
+
+        "403": # status code
+          description: UnAuthorized Acess Denied
+    get:
+      tags:
+        - CUSTOMER
+      summary: view all purposes.
+      description: call this api to view all purposes to choose.
+      responses:
+        "200": # status code
+          description: return array of account purposes.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Category"
+        "400": # status code
+          description: UnAuthorized Access Denied
   /users/login:
     post:
       tags:
@@ -454,6 +499,14 @@ components:
         files:
           type: string
           example: abc.pdf
+    Category:
+      type: object
+      properties:
+        categoryName:
+          type: array
+          enum: [Business, Eduction, Private]
+          example: [Business, Eduction, Private]
+
     ApiResponse:
       type: object
       properties:
@@ -515,3 +568,10 @@ components:
           schema:
             items:
               $ref: "#/components/schemas/Collection"
+    Category:
+      description: Category
+      content:
+        application/json:
+          schema:
+            items:
+              $ref: "#/components/schemas/Category"

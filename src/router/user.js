@@ -43,4 +43,9 @@ router.post("/collection", userController.addCollection);
 router.get("/collection", userController.viewCollection);
 router.put("/collection/:id", userController.editCollection);
 
+router.post("/file", userController.shareFile);
+router.get("/file", userController.viewShareFile);
+router.get("/file/:id", userController.viewShareFileDetails);
+router.put("/file/:id", userController.editShareFile);
+
 export default router;
