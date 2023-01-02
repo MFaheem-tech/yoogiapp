@@ -400,6 +400,95 @@ paths:
       responses:
         default:
           description: successful operation
+  /users/file:
+    post:
+      tags:
+        - CUSTOMER
+      summary: Add new file
+      description: Call this api to add new file.
+      requestBody:
+        description: Creating a new file
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShareFile"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/ShareFile"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/ShareFile"
+        required: true
+      responses:
+        "201": # status code
+          description: This return the created file.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShareFile"
+        "400": # status code
+          description: File already exist.
+
+        "403": # status code
+          description: UnAuthorized Acess Denied
+    get:
+      tags:
+        - CUSTOMER
+      summary: view all collections.
+      description: call this api to view all files.
+      responses:
+        "200": # status code
+          description: return array of files
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShareFile"
+        "400": # status code
+          description: UnAuthorized Access Denied
+  /users/file/{id}:
+    get:
+      tags:
+        - CUSTOMER
+      summary: View file details
+      description: call this api to view file details
+      parameters:
+        - name: id
+          in: path
+          description: id is required
+          required: true
+          schema:
+            type: string
+            example: 631b0b88970b8b1d149f61d6
+      responses:
+        default:
+          description: successful operation
+    put:
+      tags:
+        - CUSTOMER
+      summary: Edit file
+      description: call this api to edit file
+      parameters:
+        - name: id
+          in: path
+          description: id is required
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Edit file
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShareFile"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/ShareFile"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/ShareFile"
+      responses:
+        default:
+          description: successful operation
 components:
   schemas:
     CustomerAuth:
@@ -499,6 +588,25 @@ components:
         files:
           type: string
           example: abc.pdf
+    ShareFile:
+      type: object
+      properties:
+        fileName:
+          type: string
+          example: myGrandson
+        description:
+          type: string
+          example: Description related to file
+        tags:
+          type: array
+          example: [tag1, tag2]
+        shareWith:
+          type: string
+          description: "Enter the e-mails"
+          example: [faheem@gmail.com, ali@gmail.com]
+        collectionId:
+          type: string
+          example: "639afc064094b2067f836735"
     Category:
       type: object
       properties:
@@ -575,3 +683,10 @@ components:
           schema:
             items:
               $ref: "#/components/schemas/Category"
+    ShareFile:
+      description: ShareFile
+      content:
+        application/json:
+          schema:
+            items:
+              $ref: "#/components/schemas/ShareFile"
