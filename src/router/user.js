@@ -23,7 +23,9 @@ router.post(
   userController.uploadMultiple
 );
 
+router.post("/share", userController.share);
 router.post("/register", userController.register);
+router.patch("/account-type", userController.accountType);
 router.post("/login", userController.login);
 router.post("/password-reset", userController.resetPasswordRequest);
 router.post("/verify-reset-code", userController.verifyCode);

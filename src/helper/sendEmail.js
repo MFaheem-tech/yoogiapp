@@ -4,22 +4,26 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const sendEmailNow = (email, from, subject, html) => {
-  const transporter = nodemailer.createTransport(
-    sendgridTransport({
-      auth: {
-        api_key: process.env.EMAIL_API_KEY,
-      },
-    })
-  );
+const sendEmailNow = async (email, from, subject, html) => {
+  try {
+    const transporter = nodemailer.createTransport(
+      sendgridTransport({
+        auth: {
+          api_key: process.env.API_KEY,
+        },
+      })
+    );
 
-  const userData = {
-    to: email,
-    from: from,
-    subject: subject,
-    html: html,
-  };
-  transporter.sendMail(userData);
+    const userData = {
+      to: email,
+      from: from,
+      subject: subject,
+      html: html,
+    };
+    await transporter.sendMail(userData);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export { sendEmailNow };

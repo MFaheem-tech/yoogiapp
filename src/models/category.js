@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 
 const categorySchema = new Schema(
   {
-    categoryName: {
+    name: String,
+    purpose: {
       type: [String],
       enum: ["Business", "Education", "Private"],
     },

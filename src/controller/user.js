@@ -12,6 +12,82 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export default {
+  // share via email or on a group
+  share: async (req, res) => {
+    try {
+      // grap the file
+      const file = await ShareFile.findById(req.body.fileId);
+      if (file) {
+        // find memebers in a group
+        const group = await Group.findById(req.body.groupId);
+        if (group || group.members.length !== 0) {
+          await Promise.all(
+            group.members.map(async (memberEmail) => {
+              const user = await User.findOne({ email: memberEmail });
+              if (user) {
+                // send emails\
+                if (!file.shareWith.includes(user._id.toString())) {
+                  file.shareWith.push(user._id.toString());
+                  const from = "faheemuhammad320@gmail.com";
+                  const subject = `File has been shared with you on a group ${group.name}`;
+                  const html = `
+                <div>
+                    <h5 style="color:red"> ${file.path} </h5>
+                    <h3>You have a new file> </span> </h3>
+                    <p>
+                    <hr>
+                </div>
+                      `;
+                  //sendemail now
+                  try {
+                    sendEmailNow(user.email, from, subject, html);
+                  } catch (error) {
+                    console.log(error.message);
+                  }
+                }
+              }
+            })
+          );
+        }
+
+        // find users by emails
+        if (req.body.userEmails.length !== 0) {
+          await Promise.all(
+            req.body.userEmails.map(async (email) => {
+              const user = await User.findOne({ email: email });
+              if (user) {
+                if (!file.shareWith.includes(user._id.toString())) {
+                  console.log("shaed with ", user._id.toString());
+                  file.shareWith.push(user._id.toString());
+                  const from = "faheemuhammad320@gmail.com";
+                  const subject = "File has been shared with you";
+                  const html = `
+                  <div>
+                      <h5 style="color:red">  ${file.path} </h5>
+                      <h3>You have a new file> </span> </h3>
+                      <p>
+                      <hr>
+                  </div>
+                        `;
+                  //sendemail now
+                  try {
+                    sendEmailNow(user.email, from, subject, html);
+                  } catch (error) {
+                    console.log(error.message);
+                  }
+                }
+              }
+            })
+          );
+        }
+        await file.save();
+        return res.status(200).json({ msg: "file shared successfully" });
+      }
+      return res.status(404).json({ error: "file not found" });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
   register: async (req, res) => {
     try {
       const { email, password, name } = req.body;
@@ -28,6 +104,26 @@ export default {
       const newuser = await user.save();
       return res.status(201).json({
         msg: "New user created",
+        data: newuser,
+      });
+    } catch (error) {
+      res.status(500).send({
+        error: error.message,
+      });
+    }
+  },
+  accountType: async (req, res) => {
+    try {
+      const { categoryId, userId } = req.body;
+      const category = await Category.findById(categoryId);
+      if (!category) {
+        return res.status(404).send({ msg: "Category not found" });
+      }
+      const user = await User.findById(userId);
+      user.puroseOfAccount = category._id;
+      const newuser = await user.save();
+      return res.status(200).json({
+        msg: "New user  category added",
         data: newuser,
       });
     } catch (error) {
@@ -306,7 +402,7 @@ export default {
       if (exists) {
         return res.status(400).json({ msg: "This is already exists" });
       }
-      const file = await Collection.create(body);
+      const file = await ShareFile.create(body);
       return res.status(201).json(file);
     } catch (error) {
       return res.status(500).send({ error: error.message });

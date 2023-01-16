@@ -35,7 +35,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 const port = process.env.PORT || 5000;
-const host = "yoogi.cyclic.app" || "localhost";
+// const host = "yoogi.cyclic.app" || "localhost";
+const host = "localhost";
 
 try {
   app.get("/", (req, res) => {
