@@ -252,6 +252,7 @@ export default {
         resetCodeExpirationTime: { $gt: Date.now() },
         // _id: userId
       });
+      console.log(user);
       if (!user) {
         return res.status(200).send({ msg: "Invalid token" });
       }
@@ -334,6 +335,18 @@ export default {
   //   }
   // },
   userProfile: async (req, res) => {
+    try {
+      const user = await User.findById(req.user.user_id);
+      console.log(user);
+      res.send({ data: { user: user } });
+    } catch (error) {
+      res.status(400).send({
+        msg: "something went wrong",
+      });
+    }
+  },
+
+  viewUser: async (req, res) => {
     try {
       const user = await User.findById(req.user.user_id);
       console.log(user);

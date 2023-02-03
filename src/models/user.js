@@ -25,6 +25,12 @@ const userSchema = new Schema(
       type: String,
       enum: ["user", "admin"],
     },
+    passwordResetCode: Number,
+    resetCode: Number,
+    resetCodeExpirationTime: {
+      type: Date,
+    },
+    image: String,
     accountType: String,
 
     // puroseOfAccount: {
