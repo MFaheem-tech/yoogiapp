@@ -2,6 +2,7 @@ import { Router } from "express";
 import userController from "../controller/user.js";
 import { validate } from "../middleware/joiValidator.js";
 import { schema } from "../validators/user.js";
+import auth from "../middleware/auth.js";
 import upload from "../helper/uploader.js";
 
 const router = Router();
@@ -32,8 +33,9 @@ router.post("/password-reset", userController.resetPasswordRequest);
 router.post("/verify-reset-code", userController.verifyCode);
 router.post("/new-password", userController.newPassword);
 
-router.post("/choose-purpose", userController.choosePurpose);
-router.get("/choose-purpose", userController.getChoosePurpose);
+// router.post("/choose-purpose", userController.choosePurpose);
+// router.get("/choose-purpose", userController.getChoosePurpose);
+router.get("/user-profile", auth, userController.userProfile);
 
 router.post("/group", userController.createGroup);
 router.get("/group", userController.viewGroup);
