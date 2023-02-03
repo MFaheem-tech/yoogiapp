@@ -489,6 +489,96 @@ paths:
       responses:
         default:
           description: successful operation
+  /users/tag:
+    post:
+      tags:
+        - CUSTOMER
+      summary: Add new tag
+      description: Call this api to add new tag.
+      operationId: createGroup
+      requestBody:
+        description: Creating a new tag
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Tag"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/Tag"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Tag"
+        required: true
+      responses:
+        "201": # status code
+          description: This return the created tag.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tag"
+        "400": # status code
+          description: Tag already exist.
+
+        "403": # status code
+          description: UnAuthorized Acess Denied
+    get:
+      tags:
+        - CUSTOMER
+      summary: view all Tags.
+      description: call this api to view all Tags.
+      responses:
+        "200": # status code
+          description: return array of tags
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tag"
+        "400": # status code
+          description: UnAuthorized Access Denied
+  /users/tag/{id}:
+    get:
+      tags:
+        - CUSTOMER
+      summary: View tag details
+      description: call this api to view tag details.
+      parameters:
+        - name: id
+          in: path
+          description: id is required
+          required: true
+          schema:
+            type: string
+            example: 631b0b88970b8b1d149f61d6
+      responses:
+        default:
+          description: successful operation
+    put:
+      tags:
+        - CUSTOMER
+      summary: Edit file
+      description: call this api to edit tag
+      parameters:
+        - name: id
+          in: path
+          description: id is required
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Edit tag
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Tag"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/Tag"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Tag"
+      responses:
+        default:
+          description: successful operation
 components:
   schemas:
     CustomerAuth:
@@ -610,6 +700,13 @@ components:
         collectionId:
           type: string
           example: "639afc064094b2067f836735"
+
+    Tag:
+      type: object
+      properties:
+        name:
+          type: string
+          example: [Business, Eduction, Private]
     Category:
       type: object
       properties:

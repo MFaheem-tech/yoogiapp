@@ -4,8 +4,12 @@ const Schema = mongoose.Schema;
 
 const tagSchema = new Schema(
   {
-    name: String,
-    usedIn: [String],
+    name: {
+      type: String,
+      required: true,
+      unique: true,
+      default: ["business", "education", "communication"],
+    },
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: "User",

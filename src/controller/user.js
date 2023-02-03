@@ -175,7 +175,7 @@ export default {
         process.env.SECRET_KEY
       );
 
-      res.status(200).send({ msg: "Logged in successfully", token });
+      res.status(200).send({ msg: "Logged in successfully", user, token });
     } catch (error) {
       res.status(500).send({ error: error.message });
     }
@@ -499,10 +499,40 @@ export default {
   },
   viewTags: async (req, res) => {
     try {
-      const tag = await Tag.find();
+      const tag = await Tag.find({});
       return res.status(200).json(tag);
     } catch (error) {
       return res.status(500).send({ error: error.message });
+    }
+  },
+
+  viewSingleTag: async (req, res) => {
+    try {
+      const tag = await Tag.find({ _id: req.params.id });
+      return res.status(200).json(tag);
+    } catch (error) {
+      return res.status(500).send({ error: error.message });
+    }
+  },
+
+  editTag: async (req, res) => {
+    try {
+      const { body } = req;
+      const updatedTag = await Tag.findByIdAndUpdate(
+        {
+          _id: req.params.id,
+        },
+        {
+          $set: body,
+        },
+        {
+          new: true,
+        }
+      );
+
+      return res.status(200).json(updatedTag);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
     }
   },
 
