@@ -18,6 +18,10 @@ const collectionSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Group",
     },
+    collectionOwner: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
     files: [String],
   },
 

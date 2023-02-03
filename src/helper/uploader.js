@@ -2,6 +2,7 @@ import aws from "aws-sdk";
 import multer from "multer";
 import multerS3 from "multer-s3";
 import { config } from "dotenv";
+import fs from "fs";
 
 config();
 
@@ -21,7 +22,10 @@ const upload = multer({
     acl: "public-read",
     contentType: multerS3.AUTO_CONTENT_TYPE,
 
-    key: (req, file, cb) => {
+    key: async (req, file, cb) => {
+      const fileStats = await fs.stat(file);
+      const fileSizeInMb = fileStats.size;
+      console.log(fileSizeInMb);
       cb(null, Date.now().toString());
     },
   }),

@@ -25,10 +25,12 @@ const userSchema = new Schema(
       type: String,
       enum: ["user", "admin"],
     },
-    puroseOfAccount: {
-      type: Schema.Types.ObjectId,
-      ref: "Category",
-    },
+    accountType: String,
+
+    // puroseOfAccount: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "Category",
+    // },
   },
   {
     toJSON: {

@@ -3,6 +3,7 @@ import {
   Collection,
   Group,
   Category,
+  Tag,
   ShareFile,
 } from "../models/index.js";
 import bcryptjs from "bcryptjs";
@@ -28,7 +29,7 @@ export default {
                 // send emails\
                 if (!file.shareWith.includes(user._id.toString())) {
                   file.shareWith.push(user._id.toString());
-                  const from = "faheemuhammad320@gmail.com";
+                  const from = "muhammad.faheem@esols.tech";
                   const subject = `File has been shared with you on a group ${group.name}`;
                   const html = `
                 <div>
@@ -57,9 +58,9 @@ export default {
               const user = await User.findOne({ email: email });
               if (user) {
                 if (!file.shareWith.includes(user._id.toString())) {
-                  console.log("shaed with ", user._id.toString());
+                  console.log("shared with ", user._id.toString());
                   file.shareWith.push(user._id.toString());
-                  const from = "faheemuhammad320@gmail.com";
+                  const from = "muhammad.faheem@esols.tech";
                   const subject = "File has been shared with you";
                   const html = `
                   <div>
@@ -102,7 +103,7 @@ export default {
         name: name,
       });
       const newuser = await user.save();
-      return res.status(201).json({
+      return res.status(200).json({
         msg: "New user created",
         data: newuser,
       });
@@ -112,26 +113,48 @@ export default {
       });
     }
   },
-  accountType: async (req, res) => {
+
+  addAccountType: async (req, res) => {
     try {
-      const { categoryId, userId } = req.body;
-      const category = await Category.findById(categoryId);
-      if (!category) {
-        return res.status(404).send({ msg: "Category not found" });
-      }
-      const user = await User.findById(userId);
-      user.puroseOfAccount = category._id;
-      const newuser = await user.save();
-      return res.status(200).json({
-        msg: "New user  category added",
-        data: newuser,
-      });
+      const { body } = req;
+      const user = await User.findByIdAndUpdate(
+        {
+          _id: req.params.id,
+        },
+        {
+          $set: body,
+        },
+        {
+          new: true,
+        }
+      );
+
+      return res.status(200).json(user);
     } catch (error) {
-      res.status(500).send({
-        error: error.message,
-      });
+      return res.status(500).json({ error: error.message });
     }
   },
+
+  // accountType: async (req, res) => {
+  //   try {
+  //     const { categoryId, userId } = req.body;
+  //     const category = await Category.findById(categoryId);
+  //     if (!category) {
+  //       return res.status(404).send({ msg: "Category not found" });
+  //     }
+  //     const user = await User.findById(userId);
+  //     user.puroseOfAccount = category._id;
+  //     const newuser = await user.save();
+  //     return res.status(200).json({
+  //       msg: "New user  category added",
+  //       data: newuser,
+  //     });
+  //   } catch (error) {
+  //     res.status(500).send({
+  //       error: error.message,
+  //     });
+  //   }
+  // },
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
@@ -172,7 +195,7 @@ export default {
       user.resetCodeExpirationTime = Date.now() + 3600000;
       await user.save();
 
-      const from = "faheemuhammad320@gmail.com";
+      const from = "muhammad.faheem@esols.tech";
       const subject = "Password Reset Request";
       const html = `<div>
 		<h3>Password Reset Request Received for the email <span style="color:blue">${user.email} </span> </h3>
@@ -244,7 +267,7 @@ export default {
       await user.save();
 
       //send email
-      const from = "faheemuhammad320@gmail.com";
+      const from = "muhammad.faheem@esols.tech";
       const subject = "password changed";
       const html = `
 		<div>
@@ -403,7 +426,7 @@ export default {
         return res.status(400).json({ msg: "This is already exists" });
       }
       const file = await ShareFile.create(body);
-      return res.status(201).json(file);
+      return res.status(200).json(file);
     } catch (error) {
       return res.status(500).send({ error: error.message });
     }
@@ -448,12 +471,37 @@ export default {
     }
   },
 
+  // ################################### Tag
+
+  createTag: async (req, res) => {
+    try {
+      const { body } = req;
+      const exists = await Tag.findOne({ name: body.name });
+      if (exists) {
+        return res.status(400).json({ msg: "Tag already exists" });
+      }
+      const newTag = await Tag.create(body);
+      return res.status(200).json(newTag);
+    } catch (error) {
+      return res.status(500).send({ error: error.message });
+    }
+  },
+  viewTags: async (req, res) => {
+    try {
+      const tag = await Tag.find();
+      return res.status(200).json(tag);
+    } catch (error) {
+      return res.status(500).send({ error: error.message });
+    }
+  },
+
   // ################################### UPLOAD FILE
   upload: async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ error: "please upload a file!" });
       }
+      console.log(req);
       return res.status(200).json({ urls: req.file.location });
     } catch (error) {
       console.log(error);
