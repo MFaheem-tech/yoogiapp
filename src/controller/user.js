@@ -114,6 +114,28 @@ export default {
     }
   },
 
+  singUp: async (req, res) => {
+    try {
+      // const { email, password, name } = req.body;
+      const existingUser = await User.findOne({ email: req.body.email });
+      if (existingUser) {
+        return res.status(400).send({ msg: "Email not available" });
+      }
+      const hashedPassword = await bcryptjs.hash(req.body.password, 10);
+      req.body.password = hashedPassword;
+      const user = await User.create(req.body);
+      // const newuser = await user.save();
+      return res.status(200).json({
+        msg: "New user created",
+        user,
+      });
+    } catch (error) {
+      res.status(500).send({
+        error: error.message,
+      });
+    }
+  },
+
   addAccountType: async (req, res) => {
     try {
       const { body } = req;

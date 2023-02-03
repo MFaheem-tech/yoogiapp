@@ -26,6 +26,7 @@ router.post(
 
 router.post("/share", userController.share);
 router.post("/register", userController.register);
+router.post("/signup", userController.singUp);
 // router.patch("/account-type", userController.accountType);
 router.put("/account-type/:id", userController.addAccountType);
 router.post("/login", userController.login);
