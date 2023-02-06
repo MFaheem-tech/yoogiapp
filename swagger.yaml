@@ -637,6 +637,15 @@ components:
         accountType:
           type: String,
           example: Business
+        _id:
+          type: string
+          example : "63230a0e5308eed7ee4c86a9"
+        createdAt:
+          type: string
+          example : "2022-09-15T11:18:39.002Z"
+        updatedAt:
+          type: string
+          example : "2022-09-15T11:18:39.002Z"  
     Group:
       type: object
       properties:
