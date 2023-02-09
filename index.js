@@ -21,6 +21,7 @@ const options = {
 };
 
 const app = express();
+// aaaaaaaaqa
 
 //  ## Server Swagger Ui
 // app.use(
@@ -35,7 +36,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 const port = process.env.PORT || 5000;
-const host = "yoogi.cyclic.app" || "localhost" || "192.168.18.72";
+const host = "yoogi-app.onrender.com" || "localhost";
 // const host = "localhost";
 
 try {
