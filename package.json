@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "npm install && npm run dev",
+    "build": "npm install",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index",
     "dev": "nodemon index"
@@ -13,6 +13,7 @@
   "author": "M.Faheem",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.267.0",
     "aws-sdk": "^2.1274.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
