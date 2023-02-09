@@ -534,7 +534,7 @@ export default {
   },
   viewTags: async (req, res) => {
     try {
-      const tag = await Tag.find({}).populate("createdBy");
+      const tag = await Tag.find({}).populate("createdBy").select("_id");
       return res.status(200).json(tag);
     } catch (error) {
       return res.status(500).send({ error: error.message });
@@ -573,7 +573,7 @@ export default {
 
   viewUserWithTag: async (req, res) => {
     try {
-      const user = await User.find({});
+      const user = await User.find({}).populate("tag");
       return res.status(200).json(user);
     } catch (error) {
       return res.status(500).send({ error: error.message });
