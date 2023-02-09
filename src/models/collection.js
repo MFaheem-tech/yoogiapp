@@ -4,14 +4,20 @@ const Schema = mongoose.Schema;
 
 const collectionSchema = new Schema(
   {
-    displayPicture: String,
-    backgroundPicture: String,
+    profile: String,
+    cover: String,
     collectionName: String,
-    date: Date,
-    time: String,
+    schedule: {
+      date: Date,
+      time: String,
+    },
     share: {
       type: Boolean,
       default: false,
+    },
+    collectionOwner: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
     tags: [
       {
@@ -25,10 +31,6 @@ const collectionSchema = new Schema(
         ref: "Group",
       },
     ],
-    collectionOwner: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-    },
     shareCollection: [
       {
         type: Schema.Types.ObjectId,
