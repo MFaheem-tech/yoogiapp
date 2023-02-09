@@ -1,34 +1,37 @@
 {
-  "name": "yoogi",
+  "name": "yoogiapp",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
-    "build": "npm install",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index",
-    "dev": "nodemon index"
+    "build": "babel ./src --out-dir ./build",
+    "start": "node ./build/index.js",
+    "dev": "nodemon --exec npx babel-node src/index.js",
+    "lint": "eslint ."
   },
-  "author": "M.Faheem",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MFaheem-tech/yoogiapp.git"
+  },
+  "author": "",
   "license": "ISC",
-  "dependencies": {
-    "@aws-sdk/client-s3": "^3.267.0",
-    "aws-sdk": "^2.1274.0",
-    "bcryptjs": "^2.4.3",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "joi": "^17.7.0",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.8.0",
-    "morgan": "^1.10.0",
-    "multer": "^1.4.5-lts.1",
-    "multer-s3": "^3.0.1",
-    "nodemailer": "^6.8.0",
-    "nodemailer-sendgrid-transport": "^0.2.0",
-    "swagger-jsdoc": "^6.2.7",
-    "swagger-ui-express": "^4.6.0",
-    "yamljs": "^0.3.0"
+  "bugs": {
+    "url": "https://github.com/MFaheem-tech/yoogiapp/issues"
+  },
+  "homepage": "https://github.com/MFaheem-tech/yoogiapp#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.20.7",
+    "@babel/core": "^7.20.12",
+    "@babel/node": "^7.20.7",
+    "@babel/plugin-transform-runtime": "^7.19.6",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/runtime": "^7.20.13",
+    "eslint": "^8.33.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prettier": "^4.2.1",
+    "nodemon": "^2.0.20",
+    "prettier": "^2.8.4"
   }
 }
