@@ -59,4 +59,6 @@ router.get("/tag", userController.viewTags);
 router.get("/tag/:id", userController.viewSingleTag);
 router.put("/tag/:id", userController.editTag);
 
+router.get("/user-tag", userController.viewUserWithTag);
+
 export default router;

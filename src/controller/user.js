@@ -4,7 +4,7 @@ import {
   Group,
   Category,
   Tag,
-  ShareFile,
+  File,
 } from "../models/index.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -17,7 +17,7 @@ export default {
   share: async (req, res) => {
     try {
       // grap the file
-      const file = await ShareFile.findById(req.body.fileId);
+      const file = await File.findById(req.body.fileId);
       if (file) {
         // find memebers in a group
         const group = await Group.findById(req.body.groupId);
@@ -180,7 +180,7 @@ export default {
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
-      console.log(req.body);
+
       const user = await User.findOne({ email: email });
       if (!user) {
         res.status(400).send({ msg: " Invalid credentials" });
@@ -467,11 +467,11 @@ export default {
   shareFile: async (req, res) => {
     try {
       const { body } = req;
-      const exists = await ShareFile.findOne({ name: body.name });
+      const exists = await File.findOne({ name: body.name });
       if (exists) {
         return res.status(400).json({ msg: "This is already exists" });
       }
-      const file = await ShareFile.create(body);
+      const file = await File.create(body);
       return res.status(200).json(file);
     } catch (error) {
       return res.status(500).send({ error: error.message });
@@ -480,7 +480,7 @@ export default {
 
   viewShareFile: async (req, res) => {
     try {
-      const file = await ShareFile.find();
+      const file = await File.find();
       return res.status(200).json(file);
     } catch (error) {
       return res.status(500).send({ error: error.message });
@@ -489,7 +489,7 @@ export default {
 
   viewShareFileDetails: async (req, res) => {
     try {
-      const file = await ShareFile.find({ _id: req.params.id });
+      const file = await File.find({ _id: req.params.id });
       return res.status(200).json(file);
     } catch (error) {
       return res.status(500).send({ error: error.message });
@@ -499,7 +499,7 @@ export default {
   editShareFile: async (req, res) => {
     try {
       const { body } = req;
-      const updateFile = await ShareFile.findByIdAndUpdate(
+      const updateFile = await File.findByIdAndUpdate(
         {
           _id: req.params.id,
         },
@@ -534,7 +534,7 @@ export default {
   },
   viewTags: async (req, res) => {
     try {
-      const tag = await Tag.find({});
+      const tag = await Tag.find({}).populate("createdBy");
       return res.status(200).json(tag);
     } catch (error) {
       return res.status(500).send({ error: error.message });
@@ -571,6 +571,14 @@ export default {
     }
   },
 
+  viewUserWithTag: async (req, res) => {
+    try {
+      const user = await User.find({}).populate("tag");
+      return res.status(200).json(user);
+    } catch (error) {
+      return res.status(500).send({ error: error.message });
+    }
+  },
   // ################################### UPLOAD FILE
   upload: async (req, res) => {
     try {

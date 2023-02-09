@@ -6,23 +6,35 @@ const collectionSchema = new Schema(
   {
     displayPicture: String,
     backgroundPicture: String,
-    name: String,
-    members: [String],
-    tags: [String],
-    whenStart: Date,
+    collectionName: String,
+    date: Date,
+    time: String,
     share: {
       type: Boolean,
       default: false,
     },
-    group: {
-      type: Schema.Types.ObjectId,
-      ref: "Group",
-    },
+    tags: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Tag",
+      },
+    ],
+    group: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Group",
+      },
+    ],
     collectionOwner: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-    files: [String],
+    shareCollection: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
 
   { timestamps: true }

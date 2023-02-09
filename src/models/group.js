@@ -4,9 +4,15 @@ const Schema = mongoose.Schema;
 
 const groupSchema = new Schema(
   {
-    displayPicture: String,
-    name: String,
-    members: [String],
+    profile: String,
+    cover: String,
+    groupName: String,
+    addMember: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     GroupOwner: {
       type: Schema.Types.ObjectId,
       ref: "User",

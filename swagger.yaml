@@ -411,13 +411,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ShareFile"
+              $ref: "#/components/schemas/File"
           application/xml:
             schema:
-              $ref: "#/components/schemas/ShareFile"
+              $ref: "#/components/schemas/File"
           application/x-www-form-urlencoded:
             schema:
-              $ref: "#/components/schemas/ShareFile"
+              $ref: "#/components/schemas/File"
         required: true
       responses:
         "201": # status code
@@ -425,7 +425,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ShareFile"
+                $ref: "#/components/schemas/File"
         "400": # status code
           description: File already exist.
 
@@ -442,7 +442,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ShareFile"
+                $ref: "#/components/schemas/File"
         "400": # status code
           description: UnAuthorized Access Denied
   /users/file/{id}:
@@ -479,13 +479,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ShareFile"
+              $ref: "#/components/schemas/File"
           application/xml:
             schema:
-              $ref: "#/components/schemas/ShareFile"
+              $ref: "#/components/schemas/File"
           application/x-www-form-urlencoded:
             schema:
-              $ref: "#/components/schemas/ShareFile"
+              $ref: "#/components/schemas/File"
       responses:
         default:
           description: successful operation
@@ -639,83 +639,116 @@ components:
           example: Business
         _id:
           type: string
-          example : "63230a0e5308eed7ee4c86a9"
+          example: "63230a0e5308eed7ee4c86a9"
         createdAt:
           type: string
-          example : "2022-09-15T11:18:39.002Z"
+          example: "2022-09-15T11:18:39.002Z"
         updatedAt:
           type: string
-          example : "2022-09-15T11:18:39.002Z"  
+          example: "2022-09-15T11:18:39.002Z"
     Group:
       type: object
       properties:
-        name:
+        groupName:
           type: string
           example: myGrandson
-        displayPicture:
+        profile:
           type: string
           example: john.jpg
-        members:
+        cover:
+          type: string
+          example: john.jpg
+        GroupOwner:
+          type: string
+          example: "639afc064094b2067f836735"
+        addMember:
           type: array
-          description: "Enter the e-mails"
-          example: [faheem@gmail.com, ali@gmail.com]
+          example: ["639afc064094b2067f836735", "639afc064094b2067f836735"]
+
     Collection:
       type: object
       properties:
-        name:
+        collectionName:
           type: string
           example: myGrandson
-        displayPicture:
+        profile:
           type: string
           example: abc.jpg
-        backgroundPicture:
+        cover:
           type: string
           example: background.jpg
-        members:
-          type: array
-          description: "Enter the e-mails"
-          example: [faheem@gmail.com, ali@gmail.com]
         tags:
           type: array
-          example: [tag1, tag2]
+          example: ["639afc064094b2067f836735", "639afc064094b2067f836735"]
         group:
           type: array
-          example: [tag1, tag2]
-        whenStart:
+          example: ["639afc064094b2067f836735", "639afc064094b2067f836735"]
+        collectionOwner:
           type: string
-          example: 24/12/2022
+          example: "639afc064094b2067f836735"
+        shareCollection:
+          type: array
+          example: ["639afc064094b2067f836735", "639afc064094b2067f836735"]
+        schedule:
+          type: object
+          properties:
+            time:
+              type: string
+              example: "10:00:00"
+            date:
+              type: string
+              example: "2023-02-07"
         share:
           type: boolean
           example: false
-        files:
-          type: string
-          example: abc.pdf
-    ShareFile:
+    File:
       type: object
       properties:
         fileName:
           type: string
           example: myGrandson
+        fileType:
+          type: string
+          example: phote
+        path:
+          type: string
+          example: abc.jpg
+        status:
+          type: string
+          enum: { active, deleted }
+          default: "active"
         description:
           type: string
           example: Description related to file
-        tags:
-          type: array
-          example: [tag1, tag2]
-        shareWith:
-          type: string
-          description: "Enter the e-mails"
-          example: [faheem@gmail.com, ali@gmail.com]
-        collectionId:
+        schedule:
+          type: object
+          properties:
+            time:
+              type: string
+              example: "10:00:00"
+            date:
+              type: string
+              example: "2023-02-07"
+        fileOwner:
           type: string
           example: "639afc064094b2067f836735"
+        tags:
+          type: array
+          example: ["639afc064094b2067f836735", "639afc064094b2067f836735"]
+        where:
+          type: array
+          example: ["639afc064094b2067f836735", "639afc064094b2067f836735"]
+        # shareWith:
+        #   type: string
+        #   description: "Enter the e-mails"
+        #   example: [faheem@gmail.com, ali@gmail.com]
 
     Tag:
       type: object
       properties:
         name:
           type: string
-          example: [Business, Eduction, Private]
+          example: Business, Eduction, Private
     Category:
       type: object
       properties:
