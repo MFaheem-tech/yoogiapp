@@ -332,7 +332,7 @@ export default {
   createGroup: async (req, res) => {
     try {
       const { body } = req;
-      const exists = await Group.findOne({ name: body.name });
+      const exists = await Group.findOne({ groupName: body.groupName });
       if (exists) {
         return res.status(400).json({ msg: "Group already exists" });
       }
