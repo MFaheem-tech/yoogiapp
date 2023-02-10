@@ -114,27 +114,27 @@ export default {
     }
   },
 
-  singUp: async (req, res) => {
-    try {
-      // const { email, password, name } = req.body;
-      const existingUser = await User.findOne({ email: req.body.email });
-      if (existingUser) {
-        return res.status(400).send({ msg: "Email not available" });
-      }
-      const hashedPassword = await bcryptjs.hash(req.body.password, 10);
-      req.body.password = hashedPassword;
-      const user = await User.create(req.body);
-      // const newuser = await user.save();
-      return res.status(200).json({
-        msg: "New user created",
-        user,
-      });
-    } catch (error) {
-      res.status(500).send({
-        error: error.message,
-      });
-    }
-  },
+  // singUp: async (req, res) => {
+  //   try {
+  //     // const { email, password, name } = req.body;
+  //     const existingUser = await User.findOne({ email: req.body.email });
+  //     if (existingUser) {
+  //       return res.status(400).send({ msg: "Email not available" });
+  //     }
+  //     const hashedPassword = await bcryptjs.hash(req.body.password, 10);
+  //     req.body.password = hashedPassword;
+  //     const user = await User.create(req.body);
+  //     // const newuser = await user.save();
+  //     return res.status(200).json({
+  //       msg: "New user created",
+  //       user,
+  //     });
+  //   } catch (error) {
+  //     res.status(500).send({
+  //       error: error.message,
+  //     });
+  //   }
+  // },
 
   addAccountType: async (req, res) => {
     try {
@@ -157,26 +157,6 @@ export default {
     }
   },
 
-  // accountType: async (req, res) => {
-  //   try {
-  //     const { categoryId, userId } = req.body;
-  //     const category = await Category.findById(categoryId);
-  //     if (!category) {
-  //       return res.status(404).send({ msg: "Category not found" });
-  //     }
-  //     const user = await User.findById(userId);
-  //     user.puroseOfAccount = category._id;
-  //     const newuser = await user.save();
-  //     return res.status(200).json({
-  //       msg: "New user  category added",
-  //       data: newuser,
-  //     });
-  //   } catch (error) {
-  //     res.status(500).send({
-  //       error: error.message,
-  //     });
-  //   }
-  // },
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
@@ -235,9 +215,7 @@ export default {
         msg: "Please check your email",
       });
     } catch (error) {
-      res.status(400).send({
-        msg: "something went wrong",
-      });
+      return res.status(500).send({ error: error.message });
     }
   },
 
@@ -254,7 +232,7 @@ export default {
       });
       console.log(user);
       if (!user) {
-        return res.status(200).send({ msg: "Invalid token" });
+        return res.status(400).send({ msg: "Invalid token" });
       }
       res
         .status(200)
@@ -262,9 +240,7 @@ export default {
 
       //redicret the user to login page
     } catch (error) {
-      res.status(400).send({
-        msg: "something went wrong",
-      });
+      res.status(500).json({ error: error.message });
     }
   },
 
@@ -278,7 +254,7 @@ export default {
         _id: userId,
       });
       if (!user) {
-        return res.status(200).send({
+        return res.status(400).send({
           msg: "Invalid code",
         });
       }
@@ -306,9 +282,7 @@ export default {
         } password changed successfully`,
       });
     } catch (error) {
-      res.status(400).send({
-        msg: "something went wrong",
-      });
+      res.status(500).json({ error: error.message });
     }
   },
   // choosePurpose: async (req, res) => {
@@ -340,21 +314,17 @@ export default {
       console.log(user);
       res.send({ data: { user: user } });
     } catch (error) {
-      res.status(400).send({
-        msg: "something went wrong",
-      });
+      res.status(500).json({ error: error.message });
     }
   },
 
   viewUser: async (req, res) => {
     try {
       const user = await User.findById(req.user.user_id);
-      console.log(user);
-      res.send({ data: { user: user } });
+
+      return res.json({ data: { user: user } });
     } catch (error) {
-      res.status(400).send({
-        msg: "something went wrong",
-      });
+      res.status(500).json({ error: error.message });
     }
   },
 
@@ -367,7 +337,7 @@ export default {
         return res.status(400).json({ msg: "Group already exists" });
       }
       const newGroup = await Group.create(body);
-      return res.status(201).json(newGroup);
+      return res.status(200).json(newGroup);
     } catch (error) {
       return res.status(500).send({ error: error.message });
     }
@@ -428,7 +398,7 @@ export default {
         return res.status(400).json({ msg: "Collection already exists" });
       }
       const collection = await Collection.create(body);
-      return res.status(201).json(collection);
+      return res.status(200).json(collection);
     } catch (error) {
       return res.status(500).send({ error: error.message });
     }

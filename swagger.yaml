@@ -68,7 +68,7 @@ paths:
               $ref: "#/components/schemas/CustomerAuth"
         required: true
       responses:
-        "202": # status code
+        "200": # status code
           description: logged in successfully.
           content:
             application/json:
@@ -101,7 +101,7 @@ paths:
               $ref: "#/components/schemas/CustomerAuth"
         required: true
       responses:
-        "202": # status code
+        "200": # status code
           description: success operation.. Kindly check your email.
           content:
             application/json:
@@ -134,7 +134,7 @@ paths:
               $ref: "#/components/schemas/VerifyCOde"
         required: true
       responses:
-        "202": # status code
+        "200": # status code
           description: success operation
           content:
             application/json:
@@ -242,7 +242,7 @@ paths:
               $ref: "#/components/schemas/Group"
         required: true
       responses:
-        "201": # status code
+        "200": # status code
           description: This return the created Group
           content:
             application/json:
@@ -332,7 +332,7 @@ paths:
               $ref: "#/components/schemas/Collection"
         required: true
       responses:
-        "201": # status code
+        "200": # status code
           description: This return the created collection
           content:
             application/json:
@@ -421,7 +421,7 @@ paths:
               $ref: "#/components/schemas/File"
         required: true
       responses:
-        "201": # status code
+        "200": # status code
           description: This return the created file.
           content:
             application/json:
