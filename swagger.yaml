@@ -536,6 +536,24 @@ paths:
                 $ref: "#/components/schemas/Tag"
         "400": # status code
           description: UnAuthorized Access Denied
+
+  /users/tag-user/{id}:
+    get:
+      tags:
+        - CUSTOMER
+      summary: View tag details by user
+      description: call this api to view tag details by user.
+      parameters:
+        - name: id
+          in: path
+          description: user id is required
+          required: true
+          schema:
+            type: string
+            example: 631b0b88970b8b1d149f61d6
+      responses:
+        default:
+          description: successful operation
   /users/tag/{id}:
     get:
       tags:

@@ -30,12 +30,7 @@ const userSchema = new Schema(
     resetCodeExpirationTime: {
       type: Date,
     },
-    tags: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Tag",
-      },
-    ],
+
     image: String,
     accountType: String,
 

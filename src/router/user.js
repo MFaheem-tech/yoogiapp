@@ -54,7 +54,8 @@ router.get("/file/:id", userController.viewShareFileDetails);
 router.put("/file/:id", userController.editShareFile);
 
 router.post("/tag", userController.createTag);
-router.get("/tag", userController.viewTags);
+// router.get("/tag", userController.viewTags);
+router.get("/tag-user/:id", userController.getTagsByUser);
 router.get("/tag/:id", userController.viewSingleTag);
 router.put("/tag/:id", userController.editTag);
 

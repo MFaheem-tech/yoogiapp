@@ -502,6 +502,16 @@ export default {
       return res.status(500).send({ error: error.message });
     }
   },
+
+  getTagsByUser: async (req, res) => {
+    try {
+      // const { userId } = req.params;
+      const tags = await Tag.find({ createdBy: req.params.id });
+      return res.status(200).json(tags);
+    } catch (error) {
+      return res.status(500).send({ error: error.message });
+    }
+  },
   viewTags: async (req, res) => {
     try {
       const tag = await Tag.find({}).populate("createdBy");
@@ -510,7 +520,6 @@ export default {
       return res.status(500).send({ error: error.message });
     }
   },
-
   viewSingleTag: async (req, res) => {
     try {
       const tag = await Tag.find({ _id: req.params.id });
