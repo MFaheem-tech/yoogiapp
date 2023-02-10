@@ -33,7 +33,6 @@ router.post("/login", userController.login);
 router.post("/password-reset", userController.resetPasswordRequest);
 router.post("/verify-reset-code", userController.verifyCode);
 router.post("/new-password", userController.newPassword);
-
 // router.post("/choose-purpose", userController.choosePurpose);
 // router.get("/choose-purpose", userController.getChoosePurpose);
 router.get("/user-profile", auth, userController.userProfile);
@@ -59,6 +58,6 @@ router.get("/tag", userController.viewTags);
 router.get("/tag/:id", userController.viewSingleTag);
 router.put("/tag/:id", userController.editTag);
 
-router.get("/user-tag", userController.viewUserWithTag);
+router.get("/user-list", userController.viewUsers);
 
 export default router;

@@ -580,6 +580,21 @@ paths:
       responses:
         default:
           description: successful operation
+  /users/user-list:
+    get:
+      tags:
+        - CUSTOMER
+      summary: view all  users.
+      description: call this api to view all  users.
+      responses:
+        "200": # status code
+          description: return array of  users
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400": # status code
+          description: UnAuthorized Access Denied
 components:
   schemas:
     CustomerAuth:
