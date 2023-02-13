@@ -353,9 +353,43 @@ export default {
   viewGroupDetails: async (req, res) => {
     try {
       const group = await Group.findOne({ _id: req.params.id });
-      return res.status(200).json(group);
+      let memberCount = 0;
+      if (group.hasOwnProperty("addMember")) {
+        memberCount = group.addMember.length;
+      }
+      console.log(memberCount);
+      return res.status(200).json({ group, memberCount });
     } catch (error) {
       return res.status(500).json({ error: error.message });
+    }
+  },
+  // openGroupcollection: async(req, res)=>{
+  //   try {
+
+  //         const { id } = req.params;
+  //         const collections = await Collection.find({ groupList: id });
+  //         return res.status(200).json(collections);
+
+  //   } catch (error) {
+  //     return res.status(500).json({ error: error.message})
+
+  //   }
+  // }
+
+  getGroupDetails: async (req, res) => {
+    try {
+      const groupId = req.params.id;
+      const group = await Group.findById(groupId).populate("collections");
+      if (!group) {
+        return res.status(400).json({ msg: "Group not found" });
+      }
+      return res.status(200).json({
+        group,
+        collections: group.collections,
+        memberCount: group.addMember.length,
+      });
+    } catch (error) {
+      return res.status(500).send({ error: error.message });
     }
   },
 

@@ -39,6 +39,7 @@ router.get("/user-profile", auth, userController.userProfile);
 
 router.post("/group", userController.createGroup);
 router.get("/group", userController.viewGroup);
+router.get("/group-open/:id", userController.getGroupDetails);
 router.get("/group/:id", userController.viewGroupDetails);
 router.put("/group/:id", userController.editGroup);
 router.delete("/group/:id", userController.deleteGroup);
