@@ -323,7 +323,11 @@ export default {
   viewGroup: async (req, res) => {
     try {
       const group = await Group.find();
-      return res.status(200).json(group);
+      const groupData = group.map((group) => ({
+        group: group,
+        count: group.addMember.length,
+      }));
+      return res.status(200).json(groupData);
     } catch (error) {
       return res.status(500).send({ error: error.message });
     }
@@ -549,6 +553,7 @@ export default {
       return res.status(500).json({ error: error.message });
     }
   },
+  // ###### End tags
 
   viewUsers: async (req, res) => {
     try {
@@ -564,7 +569,7 @@ export default {
       if (!req.file) {
         return res.status(400).json({ error: "please upload a file!" });
       }
-      console.log(req);
+
       return res.status(200).json({ urls: req.file.location });
     } catch (error) {
       console.log(error);

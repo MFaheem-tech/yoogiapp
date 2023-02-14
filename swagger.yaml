@@ -176,6 +176,48 @@ paths:
               schema:
                 type": string
                 example: email not exists.
+  /users/upload-multiple:
+    post:
+      tags:
+        - CUSTOMER
+      summary: Upload multiple files - upto 10 files max.
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        "200": # status code
+          description: '["url" = "https://es.....s.s3.amazonaws.com/16631...00728","url" = "https://es.....s.s3.amazonaws.com/16631...00728"]'
+
+        "400": # status code
+          description: Please upload a file!
+  /users/upload:
+    post:
+      tags:
+        - CUSTOMER
+      summary: Uploads a file.
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "200": # status code
+          description: '{ "url" = "https://es.....s.s3.amazonaws.com/16631...00728" }'
+
+        "400": # status code
+          description: Please upload a file
   /users/user-profile:
     get:
       tags:
