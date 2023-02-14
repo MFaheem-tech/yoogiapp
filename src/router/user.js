@@ -33,14 +33,11 @@ router.post("/login", userController.login);
 router.post("/password-reset", userController.resetPasswordRequest);
 router.post("/verify-reset-code", userController.verifyCode);
 router.post("/new-password", userController.newPassword);
-// router.post("/choose-purpose", userController.choosePurpose);
-// router.get("/choose-purpose", userController.getChoosePurpose);
 router.get("/user-profile", auth, userController.userProfile);
 
 router.post("/group", userController.createGroup);
 router.get("/group", userController.viewGroup);
 router.get("/group-open/:id", userController.getGroupDetails);
-router.get("/group/:id", userController.viewGroupDetails);
 router.put("/group/:id", userController.editGroup);
 router.delete("/group/:id", userController.deleteGroup);
 
@@ -59,6 +56,7 @@ router.get("/tag", userController.viewTags);
 router.get("/tag-user/:id", userController.getTagsByUser);
 router.get("/tag/:id", userController.viewSingleTag);
 router.put("/tag/:id", userController.editTag);
+router.delete("/tag/:id", userController.deleteTag);
 
 router.get("/user-list", userController.viewUsers);
 

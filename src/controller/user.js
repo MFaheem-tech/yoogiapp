@@ -285,29 +285,7 @@ export default {
       res.status(500).json({ error: error.message });
     }
   },
-  // choosePurpose: async (req, res) => {
-  //   try {
-  //     const { body } = req;
-  //     const exists = await Category.findOne({
-  //       categoryName: body.categoryName,
-  //     });
-  //     if (exists) {
-  //       return res.status(400).json({ msg: "Category already exists" });
-  //     }
-  //     const purpose = await Category.create(req.body);
-  //     return res.status(200).json(purpose);
-  //   } catch (error) {
-  //     return res.status(500).json({ error: error.message });
-  //   }
-  // },
-  // getChoosePurpose: async (req, res) => {s
-  //   try {
-  //     const purpose = await Category.find();
-  //     return res.status(200).json(purpose);
-  //   } catch (error) {
-  //     return res.status(500).send({ error: error.message });
-  //   }
-  // },
+
   userProfile: async (req, res) => {
     try {
       const user = await User.findById(req.user.user_id);
@@ -350,31 +328,6 @@ export default {
       return res.status(500).send({ error: error.message });
     }
   },
-  viewGroupDetails: async (req, res) => {
-    try {
-      const group = await Group.findOne({ _id: req.params.id });
-      let memberCount = 0;
-      if (group.hasOwnProperty("addMember")) {
-        memberCount = group.addMember.length;
-      }
-      console.log(memberCount);
-      return res.status(200).json({ group, memberCount });
-    } catch (error) {
-      return res.status(500).json({ error: error.message });
-    }
-  },
-  // openGroupcollection: async(req, res)=>{
-  //   try {
-
-  //         const { id } = req.params;
-  //         const collections = await Collection.find({ groupList: id });
-  //         return res.status(200).json(collections);
-
-  //   } catch (error) {
-  //     return res.status(500).json({ error: error.message})
-
-  //   }
-  // }
 
   getGroupDetails: async (req, res) => {
     try {
@@ -385,7 +338,7 @@ export default {
       }
       return res.status(200).json({
         group,
-        collections: group.collections,
+        // collections: group.collections,
         memberCount: group.addMember.length,
       });
     } catch (error) {
@@ -427,7 +380,9 @@ export default {
   addCollection: async (req, res) => {
     try {
       const { body } = req;
-      const exists = await Collection.findOne({ name: body.name });
+      const exists = await Collection.findOne({
+        collectionName: body.collectionName,
+      });
       if (exists) {
         return res.status(400).json({ msg: "Collection already exists" });
       }
@@ -526,10 +481,10 @@ export default {
   createTag: async (req, res) => {
     try {
       const { body } = req;
-      const exists = await Tag.findOne({ name: body.name });
-      if (exists) {
-        return res.status(400).json({ msg: "Tag already exists" });
-      }
+      // const exists = await Tag.findOne({ name: body.name });
+      // if (exists) {
+      //   return res.status(400).json({ msg: "Tag already exists" });
+      // }
       const newTag = await Tag.create(body);
       return res.status(200).json(newTag);
     } catch (error) {
@@ -579,6 +534,17 @@ export default {
       );
 
       return res.status(200).json(updatedTag);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
+  deleteTag: async (req, res) => {
+    try {
+      const tag = await Tag.findByIdAndDelete({ _id: req.params.id });
+      if (!tag) {
+        return res.status(404).json({ msg: "tag not found with this id" });
+      }
+      return res.status(200).json({ msg: "tags deleted successfully" });
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }
