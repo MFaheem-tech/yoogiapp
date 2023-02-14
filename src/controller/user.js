@@ -320,6 +320,20 @@ export default {
       return res.status(500).send({ error: error.message });
     }
   },
+  getGroupByUser: async (req, res) => {
+    try {
+      // const { userId } = req.params;
+      const group = await Group.find({ GroupOwner: req.params.id });
+
+      const groupData = group.map((group) => ({
+        group: group,
+        count: group.addMember.length,
+      }));
+      return res.status(200).json(groupData);
+    } catch (error) {
+      return res.status(500).send({ error: error.message });
+    }
+  },
   viewGroup: async (req, res) => {
     try {
       const group = await Group.find();
