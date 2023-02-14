@@ -34,6 +34,7 @@ router.post("/password-reset", userController.resetPasswordRequest);
 router.post("/verify-reset-code", userController.verifyCode);
 router.post("/new-password", userController.newPassword);
 router.get("/user-profile", auth, userController.userProfile);
+router.put("/profile/update", auth, userController.updateProfile);
 
 router.post("/group", userController.createGroup);
 router.get("/group", userController.viewGroup);

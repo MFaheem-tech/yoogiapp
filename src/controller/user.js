@@ -295,7 +295,18 @@ export default {
       res.status(500).json({ error: error.message });
     }
   },
-
+  updateProfile: async (req, res) => {
+    try {
+      const user = await User.findByIdAndUpdate(
+        { _id: req.user.user_id },
+        { $set: req.body },
+        { new: true }
+      );
+      return res.status(200).json(user);
+    } catch (err) {
+      return res.status(500).json({ error: err.message });
+    }
+  },
   viewUser: async (req, res) => {
     try {
       const user = await User.findById(req.user.user_id);
@@ -322,13 +333,18 @@ export default {
   },
   getGroupByUser: async (req, res) => {
     try {
-      // const { userId } = req.params;
       const group = await Group.find({ GroupOwner: req.params.id });
+      if (!group) {
+        return res
+          .status(404)
+          .json({ message: "No groups found for the given user ID." });
+      }
 
       const groupData = group.map((group) => ({
         group: group,
         count: group.addMember.length,
       }));
+
       return res.status(200).json(groupData);
     } catch (error) {
       return res.status(500).send({ error: error.message });

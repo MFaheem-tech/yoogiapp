@@ -235,6 +235,36 @@ paths:
           description: UnAuthorized Acess Denied
       security:
         - BearerAuth: []
+  /users/profile/update:
+    put:
+      tags:
+        - CUSTOMER
+      summary: Update Profile
+      description: User Specific .
+      requestBody:
+        description: Update Your Profile
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200": # status code
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Users"
+        "400": # status code
+          description: Invalid Email
+          content:
+            application/json:
+              schema:
+                type: string
+                example: \"email\" must be a valid email
+        "403": # status code
+          description: UnAuthorized Acess Denied
+      security:
+        - BearerAuth: []
   /users/account-type/{id}:
     put:
       tags:
@@ -738,6 +768,9 @@ components:
         updatedAt:
           type: string
           example: "2022-09-15T11:18:39.002Z"
+        image:
+          type: string
+          example: " "
     Group:
       type: object
       properties:
@@ -750,7 +783,7 @@ components:
         cover:
           type: string
           example: john.jpg
-        GroupOwner:
+        groupOwner:
           type: string
           example: "639afc064094b2067f836735"
         addMember:
