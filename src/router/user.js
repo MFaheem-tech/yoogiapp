@@ -41,6 +41,8 @@ router.get("/group", userController.viewGroup);
 router.get("/group/:id", userController.getGroupByUser);
 router.get("/group-added/:id", userController.getGroupAddedUser);
 router.get("/group-open/:id", userController.getGroupDetails);
+router.post("/group/:id/add-members", userController.addMembers);
+router.post("/group/:id/remove-members", userController.removeMembers);
 router.put("/group/:id", userController.editGroup);
 router.delete("/group/:id", userController.deleteGroup);
 

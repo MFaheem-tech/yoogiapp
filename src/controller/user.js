@@ -372,6 +372,7 @@ export default {
       return res.status(500).send({ error: error.message });
     }
   },
+
   viewGroup: async (req, res) => {
     try {
       const group = await Group.find();
@@ -399,6 +400,67 @@ export default {
       });
     } catch (error) {
       return res.status(500).send({ error: error.message });
+    }
+  },
+  addMembers: async (req, res) => {
+    try {
+      const groupId = req.params.id;
+      const newMembers = req.body.newMembers; // Assumes newMembers is an array of user IDs
+
+      const group = await Group.findById(groupId);
+
+      if (!group) {
+        return res.status(404).json({ error: "Group not found" });
+      }
+
+      // Filter out new members that already exist in addMember field
+      const uniqueNewMembers = newMembers.filter(
+        (member) => !group.addMember.includes(member)
+      );
+
+      if (uniqueNewMembers.length === 0) {
+        return res.json(group);
+      }
+
+      // Add new members to addMember field
+      group.addMember.push(...uniqueNewMembers);
+
+      // Save updated group document
+      await group.save();
+
+      res.status(200).json(group);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
+  removeMembers: async (req, res) => {
+    try {
+      const groupId = req.params.id;
+      const memberToRemove = req.body.memberToRemove; // Assumes memberToRemove is a user ID
+      console.log(groupId);
+      const group = await Group.findById(groupId);
+
+      if (!group) {
+        return res.status(404).json({ error: "Group not found" });
+      }
+
+      // Find the index of the member to remove
+      const index = group.addMember.indexOf(memberToRemove);
+
+      // If member is not found, return an error
+      if (index === -1) {
+        return res.status(404).json({ error: "Member not found in group" });
+      }
+
+      // Remove the member from the addMember field
+      group.addMember.splice(index, 1);
+
+      // Save updated group document
+      await group.save();
+
+      res.status(200).json(group);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
     }
   },
 
