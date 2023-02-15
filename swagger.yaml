@@ -383,6 +383,24 @@ paths:
       responses:
         default:
           description: successful operation
+  /users/group-added/{id}:
+    get:
+      tags:
+        - CUSTOMER
+      summary: View all groups details in which user is added
+      description: call this api to view group details in which user is added by id.
+      parameters:
+        - name: id
+          in: path
+          description: id is required
+          required: true
+          schema:
+            type: string
+            example: 631b0b88970b8b1d149f61d6
+      responses:
+        default:
+          description: successful operation
+
   /users/collection:
     post:
       tags:

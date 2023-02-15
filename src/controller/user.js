@@ -350,6 +350,28 @@ export default {
       return res.status(500).send({ error: error.message });
     }
   },
+  getGroupAddedUser: async (req, res) => {
+    try {
+      const group = await Group.find({ addMember: req.params.id })
+        .populate({ path: "groupOwner", select: "-password" })
+        .populate("collections")
+        .exec();
+      if (!group) {
+        return res
+          .status(404)
+          .json({ message: "No groups found for the given user ID." });
+      }
+
+      const groupData = group.map((group) => ({
+        group: group,
+        count: group.addMember.length,
+      }));
+
+      return res.status(200).json(groupData);
+    } catch (error) {
+      return res.status(500).send({ error: error.message });
+    }
+  },
   viewGroup: async (req, res) => {
     try {
       const group = await Group.find();
