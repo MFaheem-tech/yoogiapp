@@ -339,6 +339,23 @@ paths:
                 $ref: "#/components/schemas/Group"
         "400": # status code
           description: UnAuthorized Access Denied
+  /users/group/{id}/members:
+    get:
+      tags:
+        - CUSTOMER
+      summary: View members of the group.
+      description: call this api to members of the group.
+      parameters:
+        - name: id
+          in: path
+          description: Group id is required
+          required: true
+          schema:
+            type: string
+            example: 631b0b88970b8b1d149f61d6
+      responses:
+        default:
+          description: successful operation
   /users/group/{id}:
     get:
       tags:
@@ -380,6 +397,22 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: "#/components/schemas/Group"
+      responses:
+        default:
+          description: successful operation
+    delete:
+      tags:
+        - CUSTOMER
+      summary: delete group
+      description: call this api to delete group
+      parameters:
+        - name: id
+          in: path
+          description: id is required
+          required: true
+          schema:
+            type: string
+            example: 631b0b88970b8b1d149f61d6
       responses:
         default:
           description: successful operation
