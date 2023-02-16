@@ -354,7 +354,7 @@ export default {
     try {
       const group = await Group.find({ addMember: req.params.id })
         .populate({ path: "groupOwner", select: "-password" })
-        .populate("collections")
+        .populate({ path: "addMember", select: "-password" })
         .exec();
       if (!group) {
         return res
