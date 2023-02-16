@@ -490,7 +490,7 @@ paths:
         default:
           description: successful operation
 
-  /users/collection:
+  /collections/add-collection:
     post:
       tags:
         - CUSTOMER
@@ -522,6 +522,7 @@ paths:
 
         "403": # status code
           description: UnAuthorized Acess Denied
+  /collections/view-collections:
     get:
       tags:
         - CUSTOMER
@@ -536,7 +537,7 @@ paths:
                 $ref: "#/components/schemas/Collection"
         "400": # status code
           description: UnAuthorized Access Denied
-  /users/collection/{id}:
+  /collections/collection/{id}:
     get:
       tags:
         - CUSTOMER

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import userController from "../controller/user.js";
+import collectionController from "../controller/collection.js";
 import { validate } from "../middleware/joiValidator.js";
 import { schema } from "../validators/user.js";
 import auth from "../middleware/auth.js";
