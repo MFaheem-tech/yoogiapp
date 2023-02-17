@@ -321,7 +321,6 @@ export default {
   createGroup: async (req, res) => {
     try {
       const { body } = req;
-      const exists = await Group.findOne({ groupName: body.groupName });
       const newGroup = await Group.create(body);
       return res.status(200).json(newGroup);
     } catch (error) {
