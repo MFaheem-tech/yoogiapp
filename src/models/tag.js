@@ -7,7 +7,6 @@ const tagSchema = new Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
       default: ["business", "education", "communication"],
     },
     createdBy: {
