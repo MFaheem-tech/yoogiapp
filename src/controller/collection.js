@@ -1,11 +1,4 @@
-import {
-  User,
-  Collection,
-  Group,
-  Category,
-  Tag,
-  File,
-} from "../models/index.js";
+import { User, Collection, Group, Tag, File } from "../models/index.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { sendEmailNow } from "../helper/sendEmail.js";

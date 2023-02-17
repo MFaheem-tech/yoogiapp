@@ -1,11 +1,4 @@
-import {
-  User,
-  Collection,
-  Group,
-  Category,
-  Tag,
-  File,
-} from "../models/index.js";
+import { User, Collection, Group, Tag, File } from "../models/index.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { sendEmailNow } from "../helper/sendEmail.js";
@@ -569,8 +562,11 @@ export default {
 
   createTag: async (req, res) => {
     try {
-      const { body } = req;
-      const newTag = await Tag.create(body);
+      const newTag = await Tag.create({
+        name: req.body.name,
+        createdBy: req.body.createdBy,
+      });
+      console.log(newTag);
       return res.status(200).json(newTag);
     } catch (error) {
       return res.status(500).send({ error: error.message });

@@ -6,8 +6,7 @@ const tagSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
-      default: ["business", "education", "communication"],
+      unique: false,
     },
     createdBy: {
       type: Schema.Types.ObjectId,
