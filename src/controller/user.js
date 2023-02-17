@@ -512,53 +512,6 @@ export default {
     }
   },
 
-  // ################################### Collections
-  // addCollection: async (req, res) => {
-  //   try {
-  //     const { body } = req;
-  //     const exists = await Collection.findOne({
-  //       collectionName: body.collectionName,
-  //     });
-  //     if (exists) {
-  //       return res.status(400).json({ msg: "Collection already exists" });
-  //     }
-  //     const collection = await Collection.create(body);
-  //     return res.status(200).json(collection);
-  //   } catch (error) {
-  //     return res.status(500).send({ error: error.message });
-  //   }
-  // },
-
-  // viewCollection: async (req, res) => {
-  //   try {
-  //     const details = await Collection.find();
-  //     return res.status(200).json(details);
-  //   } catch (error) {
-  //     return res.status(500).send({ error: error.message });
-  //   }
-  // },
-
-  // editCollection: async (req, res) => {
-  //   try {
-  //     const { body } = req;
-  //     const updateCollection = await Collection.findByIdAndUpdate(
-  //       {
-  //         _id: req.params.id,
-  //       },
-  //       {
-  //         $set: body,
-  //       },
-  //       {
-  //         new: true,
-  //       }
-  //     );
-
-  //     return res.status(200).json(updateCollection);
-  //   } catch (error) {
-  //     return res.status(500).json({ error: error.message });
-  //   }
-  // },
-
   shareFile: async (req, res) => {
     try {
       const { body } = req;
@@ -617,10 +570,6 @@ export default {
   createTag: async (req, res) => {
     try {
       const { body } = req;
-      // const exists = await Tag.findOne({ name: body.name });
-      // if (exists) {
-      //   return res.status(400).json({ msg: "Tag already exists" });
-      // }
       const newTag = await Tag.create(body);
       return res.status(200).json(newTag);
     } catch (error) {
