@@ -322,9 +322,6 @@ export default {
     try {
       const { body } = req;
       const exists = await Group.findOne({ groupName: body.groupName });
-      if (exists) {
-        return res.status(400).json({ msg: "Group already exists" });
-      }
       const newGroup = await Group.create(body);
       return res.status(200).json(newGroup);
     } catch (error) {
@@ -386,10 +383,15 @@ export default {
     }
   },
 
-  getGroupDetails: async (req, res) => {
+  openGroupDetails: async (req, res) => {
     try {
       const groupId = req.params.id;
-      const group = await Group.findById(groupId).populate("collections");
+      const group = await Group.findById(groupId)
+        .populate({ path: "groupOwner", select: "-password" })
+        .populate({ path: "addMember", select: "-password" })
+        .populate({
+          path: "collections",
+        });
       if (!group) {
         return res.status(400).json({ msg: "Group not found" });
       }
@@ -512,51 +514,51 @@ export default {
   },
 
   // ################################### Collections
-  addCollection: async (req, res) => {
-    try {
-      const { body } = req;
-      const exists = await Collection.findOne({
-        collectionName: body.collectionName,
-      });
-      if (exists) {
-        return res.status(400).json({ msg: "Collection already exists" });
-      }
-      const collection = await Collection.create(body);
-      return res.status(200).json(collection);
-    } catch (error) {
-      return res.status(500).send({ error: error.message });
-    }
-  },
+  // addCollection: async (req, res) => {
+  //   try {
+  //     const { body } = req;
+  //     const exists = await Collection.findOne({
+  //       collectionName: body.collectionName,
+  //     });
+  //     if (exists) {
+  //       return res.status(400).json({ msg: "Collection already exists" });
+  //     }
+  //     const collection = await Collection.create(body);
+  //     return res.status(200).json(collection);
+  //   } catch (error) {
+  //     return res.status(500).send({ error: error.message });
+  //   }
+  // },
 
-  viewCollection: async (req, res) => {
-    try {
-      const details = await Collection.find();
-      return res.status(200).json(details);
-    } catch (error) {
-      return res.status(500).send({ error: error.message });
-    }
-  },
+  // viewCollection: async (req, res) => {
+  //   try {
+  //     const details = await Collection.find();
+  //     return res.status(200).json(details);
+  //   } catch (error) {
+  //     return res.status(500).send({ error: error.message });
+  //   }
+  // },
 
-  editCollection: async (req, res) => {
-    try {
-      const { body } = req;
-      const updateCollection = await Collection.findByIdAndUpdate(
-        {
-          _id: req.params.id,
-        },
-        {
-          $set: body,
-        },
-        {
-          new: true,
-        }
-      );
+  // editCollection: async (req, res) => {
+  //   try {
+  //     const { body } = req;
+  //     const updateCollection = await Collection.findByIdAndUpdate(
+  //       {
+  //         _id: req.params.id,
+  //       },
+  //       {
+  //         $set: body,
+  //       },
+  //       {
+  //         new: true,
+  //       }
+  //     );
 
-      return res.status(200).json(updateCollection);
-    } catch (error) {
-      return res.status(500).json({ error: error.message });
-    }
-  },
+  //     return res.status(200).json(updateCollection);
+  //   } catch (error) {
+  //     return res.status(500).json({ error: error.message });
+  //   }
+  // },
 
   shareFile: async (req, res) => {
     try {

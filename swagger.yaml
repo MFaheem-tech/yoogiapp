@@ -344,7 +344,7 @@ paths:
       tags:
         - CUSTOMER
       summary: View members of the group.
-      description: call this api to members of the group.
+      description: call this api to view members of the group.
       parameters:
         - name: id
           in: path
@@ -360,12 +360,12 @@ paths:
     get:
       tags:
         - CUSTOMER
-      summary: View group details
-      description: call this api to view group details
+      summary: View  single group detail
+      description: call this api to view  single group detail
       parameters:
         - name: id
           in: path
-          description: id is required
+          description: Group id is required
           required: true
           schema:
             type: string
@@ -486,6 +486,23 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: "#/components/schemas/AddRemoveExample"
+      responses:
+        default:
+          description: successful operation
+  /users/group-open/{id}:
+    get:
+      tags:
+        - CUSTOMER
+      summary: open group details and see all participants and collections in that group.
+      description: call this api to open group details
+      parameters:
+        - name: id
+          in: path
+          description: id is required
+          required: true
+          schema:
+            type: string
+            example: 631b0b88970b8b1d149f61d6
       responses:
         default:
           description: successful operation

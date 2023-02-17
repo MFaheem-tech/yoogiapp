@@ -51,11 +51,19 @@ export default {
         shareCollection: req.body.shareCollection,
       });
 
-      // Save the new collection to the database
+      // Save
       const savedCollection = await newCollection.save();
 
-      // Return the saved collection as a JSON response
-      res.json(savedCollection);
+      const group = await Group.findById(req.body.group);
+
+      // Add the new collection to the group's collections array
+      group.collections.push(savedCollection._id);
+
+      // Save the updated group to the database
+      await group.save();
+
+      // Return the saved collection
+      res.status(200).json(savedCollection);
     } catch (error) {
       return res.status(500).send({ error: error.message });
     }

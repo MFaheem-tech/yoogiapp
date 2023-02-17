@@ -41,17 +41,12 @@ router.post("/group", userController.createGroup);
 router.get("/group", userController.viewGroup);
 router.get("/group/:id", userController.getGroupByUser);
 router.get("/group-added/:id", userController.getGroupAddedUser);
-router.get("/group-open/:id", userController.getGroupDetails);
+router.get("/group-open/:id", userController.openGroupDetails);
 router.post("/group/:id/add-members", userController.addMembers);
 router.post("/group/:id/remove-members", userController.removeMembers);
 router.get("/group/:id/members", userController.viewMembers);
 router.put("/group/:id", userController.editGroup);
 router.delete("/group/:id", userController.deleteGroup);
-
-// collection
-router.post("/collection", userController.addCollection);
-router.get("/collection", userController.viewCollection);
-router.put("/collection/:id", userController.editCollection);
 
 router.post("/file", userController.shareFile);
 router.get("/file", userController.viewShareFile);
