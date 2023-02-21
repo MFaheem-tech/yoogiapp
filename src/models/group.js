@@ -13,7 +13,7 @@ const groupSchema = new Schema(
         ref: "User",
       },
     ],
-    groupOwners: [
+    groupOwner: [
       {
         type: Schema.Types.ObjectId,
         ref: "User",

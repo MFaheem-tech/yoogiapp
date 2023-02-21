@@ -25,6 +25,9 @@ const userSchema = new Schema(
       type: String,
       enum: ["user", "admin"],
     },
+    totalFiles: String,
+    totalCollections: String,
+    totalGroups: String,
     passwordResetCode: Number,
     resetCode: Number,
     resetCodeExpirationTime: {
