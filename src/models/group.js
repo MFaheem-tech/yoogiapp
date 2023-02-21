@@ -13,10 +13,12 @@ const groupSchema = new Schema(
         ref: "User",
       },
     ],
-    groupOwner: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-    },
+    groupOwner: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     collections: [
       {
         type: mongoose.Schema.Types.ObjectId,

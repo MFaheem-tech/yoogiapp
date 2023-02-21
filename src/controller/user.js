@@ -383,6 +383,10 @@ export default {
         .populate({ path: "addMember", select: "-password" })
         .populate({
           path: "collections",
+          populate: [
+            { path: "collectionOwner", select: "-password" },
+            { path: "tags" },
+          ],
         });
       if (!group) {
         return res.status(400).json({ msg: "Group not found" });
