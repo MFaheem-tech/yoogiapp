@@ -375,6 +375,66 @@ export default {
       return res.status(500).send({ error: error.message });
     }
   },
+  transferOwner: async (req, res) => {
+    try {
+      const groupId = req.params.id;
+      const { currentOwner, newOwner } = req.body;
+      // Find the group and verify that the current owner is the one making the request
+      const group = await Group.findById(groupId);
+
+      if (!group) {
+        return res.status(404).json({ msg: "Group not found" });
+      }
+      if (!group.groupOwner.includes(currentOwner)) {
+        return res
+          .status(401)
+          .json({ msg: "You are not a current owner of this group" });
+      }
+
+      // Add the new owner to the existing list of owners
+      if (!group.groupOwner.includes(newOwner)) {
+        group.groupOwner.push(newOwner);
+      }
+
+      await group.save();
+
+      return res
+        .status(200)
+        .json({ msg: "Ownership transferred successfully" });
+    } catch (error) {
+      return res.status(500).send({ error: error.message });
+    }
+  },
+  removeOwner: async (req, res) => {
+    try {
+      const groupId = req.params.id;
+      const { currentOwner, ownerToRemove } = req.body;
+      // Find the group and verify that the current owner is the one making the request
+      const group = await Group.findById(groupId);
+
+      if (!group) {
+        return res.status(404).json({ msg: "Group not found" });
+      }
+      if (!group.groupOwner.includes(currentOwner)) {
+        return res
+          .status(401)
+          .json({ msg: "You are not a current owner of this group" });
+      }
+
+      // Remove the owner from the list
+      const index = group.groupOwner.indexOf(ownerToRemove);
+      if (index === -1) {
+        return res.status(404).json({ error: "Owner not found in group" });
+      }
+      group.groupOwner.splice(index, 1);
+
+      await group.save();
+
+      return res.status(200).json({ msg: "Ownership removed successfully" });
+    } catch (error) {
+      return res.status(500).send({ error: error.message });
+    }
+  },
 
   openGroupDetails: async (req, res) => {
     try {
@@ -387,6 +447,7 @@ export default {
           path: "collections",
           populate: [
             { path: "collectionOwner", select: "-password" },
+            { path: "shareCollection", select: "-password" },
             { path: "tags" },
           ],
         });
