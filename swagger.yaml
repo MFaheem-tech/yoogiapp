@@ -920,7 +920,7 @@ components:
         groupMaker:
           type: string
           example: "639afc064094b2067f836735"
-        groupOwners:
+        groupOwner:
           type: array
           example: ["639afc064094b2067f836735", "639afc064094b2067f836735"]
         addMember:

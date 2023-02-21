@@ -322,7 +322,7 @@ export default {
   },
   getGroupByUser: async (req, res) => {
     try {
-      const group = await Group.find({ GroupOwner: req.params.id });
+      const group = await Group.find({ groupOwner: req.params.id });
       if (!group) {
         return res
           .status(404)
@@ -343,6 +343,7 @@ export default {
     try {
       const group = await Group.find({ addMember: req.params.id })
         .populate({ path: "groupOwner", select: "-password" })
+        .populate({ path: "groupMaker", select: "-password" })
         .populate({ path: "addMember", select: "-password" })
         .exec();
       if (!group) {
@@ -380,6 +381,7 @@ export default {
       const groupId = req.params.id;
       const group = await Group.findById(groupId)
         .populate({ path: "groupOwner", select: "-password" })
+        .populate({ path: "groupMaker", select: "-password" })
         .populate({ path: "addMember", select: "-password" })
         .populate({
           path: "collections",
