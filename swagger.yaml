@@ -506,6 +506,62 @@ paths:
       responses:
         default:
           description: successful operation
+  /users/group/{id}/transfer-owner:
+    put:
+      tags:
+        - CUSTOMER
+      summary: Add owner in the list
+      description: call this api to Add new owner in the list.
+      parameters:
+        - name: id
+          in: path
+          description: Group id is required in params.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Add new owner id and also provide current owner id so after verification he can add new owner in the owner list.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OwnerTransfer"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/OwnerTransfer"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/OwnerTransfer"
+      responses:
+        default:
+          description: successful operation
+  /users/group/{id}/remove-owner:
+    put:
+      tags:
+        - CUSTOMER
+      summary: Remove owner from the list
+      description: call this api to remove  owner from the list.
+      parameters:
+        - name: id
+          in: path
+          description: Group id is required in params.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Remove owner id is required and also provide current owner id so after verification he can remove owner from the owner list.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OwnerTransfer"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/OwnerTransfer"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/OwnerTransfer"
+      responses:
+        default:
+          description: successful operation
 
   /collections/add-collection:
     post:
@@ -849,6 +905,18 @@ components:
         memberToRemove:
           type: string
           example: 63c138d2ce83161c6a418392
+    OwnerTransfer:
+      type: object
+      properties:
+        currentOwner:
+          type: string
+          example: 63c138d2ce83161c6a418392
+        newOwner:
+          type: array
+          example: ["63c138d2ce83161c6a418392"]
+        ownerToRemove:
+          type: string
+          example: 63c138d2ce83161c6a418392
     VerifyCOde:
       type: object
       properties:
@@ -1045,6 +1113,13 @@ components:
           schema:
             items:
               $ref: "#/components/schemas/AddRemoveExample"
+    OwnerTransfer:
+      description: OwnerTransfer
+      content:
+        application/json:
+          schema:
+            items:
+              $ref: "#/components/schemas/OwnerTransfer"
     VerifyCOde:
       description: Customer
       content:

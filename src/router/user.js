@@ -45,8 +45,8 @@ router.get("/group-open/:id", userController.openGroupDetails);
 router.post("/group/:id/add-members", userController.addMembers);
 router.post("/group/:id/remove-members", userController.removeMembers);
 router.get("/group/:id/members", userController.viewMembers);
-router.put("/groups/:id/transfer-owner", userController.transferOwner);
-router.put("/groups/:id/remove-owner", userController.removeOwner);
+router.put("/group/:id/transfer-owner", userController.transferOwner);
+router.put("/group/:id/remove-owner", userController.removeOwner);
 router.put("/group/:id", userController.editGroup);
 router.delete("/group/:id", userController.deleteGroup);
 
