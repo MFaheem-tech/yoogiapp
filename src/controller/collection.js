@@ -70,6 +70,71 @@ export default {
     }
   },
 
+  shareWith: async (req, res) => {
+    try {
+      const collectionId = req.params.id;
+      const shareTo = req.body.shareTo; // Assumes shareTo is an array of user IDs
+
+      const collection = await Collection.findById(collectionId);
+
+      if (!collection) {
+        return res.status(404).json({ error: "Collection not found" });
+      }
+
+      // Filter out new members that already exist in shareCollection field
+      const uniqueNewMembers = shareTo.filter(
+        (member) => !collection.shareCollection.includes(member)
+      );
+
+      if (uniqueNewMembers.length === 0) {
+        return res.json(collection);
+      }
+
+      // Add new members to shareCollection field
+      collection.shareCollection.push(...uniqueNewMembers);
+
+      // Save updated collection document
+      await collection.save();
+
+      res.status(200).json(collection);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
+
+  removeSharedMembers: async (req, res) => {
+    try {
+      const collectionId = req.params.id;
+      const memberToRemove = req.body.memberToRemove; // Assumes memberToRemove is a user ID
+
+      const collection = await Collection.findById(collectionId);
+
+      if (!collection) {
+        return res.status(404).json({ error: "Collection not found" });
+      }
+
+      // Find the index of the member to remove
+      const index = collection.shareCollection.indexOf(memberToRemove);
+
+      // If member is not found, return an error
+      if (index === -1) {
+        return res
+          .status(404)
+          .json({ error: "Member not found in collection" });
+      }
+
+      // Remove the member from the sharecollection field
+      collection.shareCollection.splice(index, 1);
+
+      // Save updated collection document
+      await collection.save();
+
+      res.status(200).json(collection);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
+
   editCollection: async (req, res) => {
     try {
       const { body } = req;

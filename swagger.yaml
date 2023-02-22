@@ -595,6 +595,62 @@ paths:
 
         "403": # status code
           description: UnAuthorized Acess Denied
+  /collections/add-member/{id}/share-with:
+    post:
+      tags:
+        - CUSTOMER
+      summary: Add member in the share collection list
+      description: call this api to add member in the share collection list.
+      parameters:
+        - name: id
+          in: path
+          description: Collection id is required
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Place here id of member which you want to add in the share collection list .
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShareWithCollection"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/ShareWithCollection"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/ShareWithCollection"
+      responses:
+        default:
+          description: successful operation
+  /collections/remove-member/{id}/remove:
+    post:
+      tags:
+        - CUSTOMER
+      summary: Remove member from the share collection list
+      description: call this api to remove member from the share collection list.
+      parameters:
+        - name: id
+          in: path
+          description: Collection id is required
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Place here id of member which you want to remove from the share collection list.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RemoveShareCollection"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/RemoveShareCollection"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/RemoveShareCollection"
+      responses:
+        default:
+          description: successful operation
   /collections/view-collections:
     get:
       tags:
@@ -905,6 +961,18 @@ components:
         memberToRemove:
           type: string
           example: 63c138d2ce83161c6a418392
+    RemoveShareCollection:
+      type: object
+      properties:
+        memberToRemove:
+          type: string
+          example: 63c138d2ce83161c6a418392
+    ShareWithCollection:
+      type: object
+      properties:
+        shareTo:
+          type: array
+          example: ["63c138d2ce83161c6a418392"]
     OwnerTransfer:
       type: object
       properties:
@@ -1113,6 +1181,20 @@ components:
           schema:
             items:
               $ref: "#/components/schemas/AddRemoveExample"
+    RemoveShareCollection:
+      description: RemoveShareCollection
+      content:
+        application/json:
+          schema:
+            items:
+              $ref: "#/components/schemas/RemoveShareCollection"
+    ShareWithCollection:
+      description: ShareWithCollection
+      content:
+        application/json:
+          schema:
+            items:
+              $ref: "#/components/schemas/ShareWithCollection"
     OwnerTransfer:
       description: OwnerTransfer
       content:
