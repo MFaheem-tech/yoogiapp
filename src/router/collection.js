@@ -14,6 +14,10 @@ router.post(
   collectionController.removeSharedMembers
 );
 router.get("/view-collections", collectionController.viewCollection);
+router.get(
+  "/share-collection/:id/members",
+  collectionController.viewShareCollectionMembers
+);
 router.put("/collection/:id", collectionController.editCollection);
 
 export default router;

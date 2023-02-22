@@ -134,6 +134,25 @@ export default {
       return res.status(500).json({ error: error.message });
     }
   },
+  viewShareCollectionMembers: async (req, res) => {
+    try {
+      const collectionId = req.params.id;
+
+      const collection = await Collection.findById(collectionId).populate(
+        "shareCollection"
+      );
+
+      if (!collection) {
+        return res.status(404).json({ error: "Collection not found" });
+      }
+
+      const members = collection.shareCollection;
+
+      res.status(200).json(members);
+    } catch (error) {
+      return res.status(500).send({ error: error.message });
+    }
+  },
 
   editCollection: async (req, res) => {
     try {

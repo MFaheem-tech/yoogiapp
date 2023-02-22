@@ -666,16 +666,16 @@ paths:
                 $ref: "#/components/schemas/Collection"
         "400": # status code
           description: UnAuthorized Access Denied
-  /collections/collection/{id}:
+  /collections/share-collection/{id}/members:
     get:
       tags:
         - CUSTOMER
-      summary: View collection details
-      description: call this api to view collection details
+      summary: View all members whom this collection was shared.
+      description: call this api to view members whom this collection was shared .
       parameters:
         - name: id
           in: path
-          description: id is required
+          description: Collection id is required
           required: true
           schema:
             type: string
@@ -683,6 +683,7 @@ paths:
       responses:
         default:
           description: successful operation
+  /collections/collection/{id}:
     put:
       tags:
         - CUSTOMER
