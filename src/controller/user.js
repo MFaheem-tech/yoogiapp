@@ -388,22 +388,59 @@ export default {
       if (!group.groupOwner.includes(currentOwner)) {
         return res
           .status(401)
-          .json({ msg: "You are not a current owner of this group" });
+          .json({ msg: "Only group owner have the authority" });
       }
 
-      // Add the new owner to the existing list of owners
-      // if (!group.groupOwner.includes(newOwner)) {
-      //   group.groupOwner.push(newOwner);
+      // // Add the new owner to the existing list of owners
+      // // if (!group.groupOwner.includes(newOwner)) {
+      // //   group.groupOwner.push(newOwner);
+      // // }
+      // // Check if the new owner already exists in the list of owners
+
+      // console.log(group.groupOwner.includes(newOwner));
+      // try {
+      //   // if (group.groupOwner.includes(newOwner)) {
+      //   //   return res
+      //   //     .status(400)
+      //   //     .json({ msg: "New owner already exists in group" });
+      //   // }
+      //   if (group.groupOwner.indexOf(newOwner) !== -1) {
+      //     return res
+      //       .status(400)
+      //       .json({ msg: "New owner already exists in group" });
+      //   }
+      // } catch (error) {
+      //   console.log(error.msg);
       // }
-      // Check if the new owner already exists in the list of owners
-      if (group.groupOwner.includes(newOwner)) {
-        return res
-          .status(400)
-          .json({ msg: "New owner already exists in group" });
+
+      // // Add the new owner to the existing list of owners
+      // // group.groupOwner.push(newOwner);
+      // console.log("Before set:", group.groupOwner);
+      // group.set({ groupOwner: [...group.groupOwner, newOwner] });
+
+      // console.log("After set:", group.groupOwner);
+      if (Array.isArray(newOwner)) {
+        for (let i = 0; i < newOwner.length; i++) {
+          if (group.groupOwner.indexOf(newOwner[i]) !== -1) {
+            return res
+              .status(400)
+              .json({ msg: "New owner already exists in group" });
+          }
+        }
+      } else {
+        if (group.groupOwner.indexOf(newOwner) !== -1) {
+          return res
+            .status(400)
+            .json({ msg: "New owner already exists in group" });
+        }
       }
 
-      // Add the new owner to the existing list of owners
-      group.groupOwner.push(newOwner);
+      // Add the new owner(s) to the existing list of owners
+      if (Array.isArray(newOwner)) {
+        group.groupOwner = group.groupOwner.concat(newOwner);
+      } else {
+        group.groupOwner.push(newOwner);
+      }
       await group.save();
 
       return res
