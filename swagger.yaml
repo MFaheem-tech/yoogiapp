@@ -683,6 +683,43 @@ paths:
       responses:
         default:
           description: successful operation
+  /collections/group/{groupId}/collection/{collectionId}:
+    delete:
+      tags:
+        - CUSTOMER
+      summary: Remove collection from the group by group owner only.
+      description: call this api to remove collection from the group permanently.
+      parameters:
+        - name: groupId
+          in: path
+          description: Group id is required
+          required: true
+          schema:
+            type: string
+            example: 631b0b88970b8b1d149f61d6
+        - name: collectionId
+          in: path
+          description: Collection id is required
+          required: true
+          schema:
+            type: string
+            example: 631b0b88970b8b1d149f61d6
+      requestBody:
+        description: please provide group owner id.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/removeCollectionFromGroup"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/removeCollectionFromGroup"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/removeCollectionFromGroup"
+        required: true
+      responses:
+        default:
+          description: successful operation
   /collections/collection/{id}:
     put:
       tags:
@@ -968,6 +1005,12 @@ components:
         memberToRemove:
           type: string
           example: 63c138d2ce83161c6a418392
+    removeCollectionFromGroup:
+      type: object
+      properties:
+        groupOwner:
+          type: string
+          example: 63c138d2ce83161c6a418392
     ShareWithCollection:
       type: object
       properties:
@@ -1189,6 +1232,13 @@ components:
           schema:
             items:
               $ref: "#/components/schemas/RemoveShareCollection"
+    removeCollectionFromGroup:
+      description: removeCollectionFromGroup
+      content:
+        application/json:
+          schema:
+            items:
+              $ref: "#/components/schemas/removeCollectionFromGroup"
     ShareWithCollection:
       description: ShareWithCollection
       content:

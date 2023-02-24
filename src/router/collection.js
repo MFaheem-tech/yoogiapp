@@ -18,6 +18,10 @@ router.get(
   "/share-collection/:id/members",
   collectionController.viewShareCollectionMembers
 );
+router.delete(
+  "/group/:groupId/collection/:collectionId",
+  collectionController.removeCollectionFromGroup
+);
 router.put("/collection/:id", collectionController.editCollection);
 
 export default router;

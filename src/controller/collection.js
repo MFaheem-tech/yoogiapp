@@ -154,6 +154,44 @@ export default {
     }
   },
 
+  removeCollectionFromGroup: async (req, res) => {
+    try {
+      const groupId = req.params.groupId;
+      const collectionId = req.params.collectionId;
+      const groupOwner = req.body.groupOwner;
+
+      // Find the group by its ID and check if the user is the group owner
+      const group = await Group.findById({
+        _id: groupId,
+        groupOwner: groupOwner,
+      });
+      if (!group) {
+        return res.status(400).json({ msg: "Group not found" });
+      }
+
+      // Find the collection by its ID and check if it belongs to the group
+      const collection = await Collection.findOne({
+        _id: collectionId,
+        group: groupId,
+      });
+      if (!collection) {
+        return res
+          .status(400)
+          .json({ msg: "Collection not found in this group" });
+      }
+
+      // Remove the collection from the group
+      group.collections = group.collections.filter(
+        (c) => c.toString() !== collectionId
+      );
+      await group.save();
+
+      return res.status(200).json({ msg: "Collection removed from group" });
+    } catch (error) {
+      return res.status(500).send({ error: error.message });
+    }
+  },
+
   editCollection: async (req, res) => {
     try {
       const { body } = req;
