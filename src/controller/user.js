@@ -309,7 +309,7 @@ export default {
       const { current_password, newPassword } = req.body;
       const user = await User.findById(req.user.user_id);
       if (!user) {
-        return res.status(200).json({
+        return res.status(404).json({
           msg: "user not found",
         });
       }
@@ -318,8 +318,8 @@ export default {
         user.password
       );
       if (!oldPassword) {
-        return res.status(200).json({
-          msg: "current password is not correct",
+        return res.status(400).json({
+          msg: "Current password is not correct",
         });
       }
       const newHashedPassword = await bcryptjs.hash(newPassword, 10);
@@ -336,11 +336,11 @@ export default {
       // </div>
       // 	`;
       //     sendEmailNow(user.email, from, subject, html);
-      res.send({ code: res.statusCode, msg: "password changed successfully" });
+      res.status(200).json({ msg: "Password changed successfully" });
     } catch (error) {
       if (error.kind === "ObjectId") {
-        return res.status(400).json({
-          msg: "user not found",
+        return res.status(404).json({
+          msg: "User not found",
         });
       }
       console.log(error);

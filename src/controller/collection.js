@@ -170,7 +170,9 @@ export default {
       }
 
       if (!group.groupOwner.includes(groupOwner)) {
-        return res.status(401).json({ msg: "Unauthorized" });
+        return res
+          .status(401)
+          .json({ msg: "Only group owner have the authority" });
       }
       // Find the collection by its ID and check if it belongs to the group
       const collection = await Collection.findOne({
