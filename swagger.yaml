@@ -1111,6 +1111,13 @@ components:
           example: john@example.com
         password:
           type: string
+        phone:
+          type: number
+          example: 0333********
+        cover:
+          type: string
+          example: abc.jpg
+
         accountType:
           type: String,
           example: Business
