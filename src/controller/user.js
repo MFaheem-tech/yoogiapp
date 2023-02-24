@@ -160,7 +160,7 @@ export default {
       }
       const validPassword = await bcryptjs.compare(password, user.password);
       if (!validPassword) {
-        return res.status(400).send({ msg: " Invalid credentials" });
+        return res.status(400).json({ msg: " Invalid credentials" });
       }
       const token = jwt.sign(
         {
@@ -170,9 +170,11 @@ export default {
         process.env.SECRET_KEY
       );
 
-      res.status(200).send({ msg: "Logged in successfully", user, token });
+      return res
+        .status(200)
+        .json({ msg: "Logged in successfully", user, token });
     } catch (error) {
-      res.status(500).send({ error: error.message });
+      res.status(500).json({ error: error.message });
     }
   },
 
@@ -298,6 +300,53 @@ export default {
       return res.status(200).json(user);
     } catch (err) {
       return res.status(500).json({ error: err.message });
+    }
+  },
+  //Change Pssword
+
+  changeCurrentPassword: async (req, res) => {
+    try {
+      const { current_password, newPassword } = req.body;
+      const user = await User.findById(req.user.user_id);
+      if (!user) {
+        return res.status(200).json({
+          msg: "user not found",
+        });
+      }
+      const oldPassword = await bcryptjs.compare(
+        current_password,
+        user.password
+      );
+      if (!oldPassword) {
+        return res.status(200).json({
+          msg: "current password is not correct",
+        });
+      }
+      const newHashedPassword = await bcryptjs.hash(newPassword, 10);
+      user.password = newHashedPassword;
+      await user.save();
+      //send the user email
+      //     const from = "ferozkalash@gmail.com";
+      //     const subject = 'password changed successfully';
+      //     const html = `
+      // <div>
+      // 	<h2> Dear <span style = "color:blue">${user.email}</span> </h2>
+      // 	<hr>
+      // 	<h3>Password changed for the email <span style="color:blue">${user.email} </span> </h3>
+      // </div>
+      // 	`;
+      //     sendEmailNow(user.email, from, subject, html);
+      res.send({ code: res.statusCode, msg: "password changed successfully" });
+    } catch (error) {
+      if (error.kind === "ObjectId") {
+        return res.status(400).json({
+          msg: "user not found",
+        });
+      }
+      console.log(error);
+      res.status(400).json({
+        error: error.message,
+      });
     }
   },
   viewUser: async (req, res) => {

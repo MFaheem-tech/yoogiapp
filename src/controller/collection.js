@@ -169,6 +169,10 @@ export default {
         return res.status(400).json({ msg: "Group not found" });
       }
 
+      if (group.groupOwner !== groupOwner) {
+        return res.status(401).json({ msg: "Unauthorized" });
+      }
+
       // Find the collection by its ID and check if it belongs to the group
       const collection = await Collection.findOne({
         _id: collectionId,

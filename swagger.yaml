@@ -265,6 +265,38 @@ paths:
           description: UnAuthorized Acess Denied
       security:
         - BearerAuth: []
+  /users/change-password:
+    put:
+      tags:
+        - CUSTOMER
+      summary: Change Password
+      description: User Specific Login Required.
+      operationId: changePassword
+      requestBody:
+        description: change your password
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePassword"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/ChangePassword"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/ChangePassword"
+      responses:
+        "200": # status code
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChangePassword"
+        "400": # status code
+          description: Invalid input
+        "403": # status code
+          description: UnAuthorized Acess Denied
+      security:
+        - BearerAuth: []
   /users/account-type/{id}:
     put:
       tags:
@@ -1059,6 +1091,15 @@ components:
         userId:
           type: string
           example: zDWo1PgegvWGHZG1w83o
+    ChangePassword:
+      type: object
+      properties:
+        current_password:
+          type: string
+          example: A32@324s&*2s
+        newPassword:
+          type: string
+          example: eA$sd^str) (Min-6 Max-15)
     User:
       type: object
       properties:
@@ -1082,7 +1123,7 @@ components:
         updatedAt:
           type: string
           example: "2022-09-15T11:18:39.002Z"
-        image:
+        profile:
           type: string
           example: " "
     Group:

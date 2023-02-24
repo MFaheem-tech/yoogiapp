@@ -15,16 +15,20 @@ const userSchema = new Schema(
       max: 64,
       trim: true,
     },
+    phone: {
+      type: Number,
+      unique: true,
+    },
     password: {
       type: String,
-      max: 256,
+      max: 15,
       min: 6,
-      trim: true,
     },
     role: {
       type: String,
       enum: ["user", "admin"],
     },
+    cover: String,
     totalFiles: String,
     totalCollections: String,
     totalGroups: String,
@@ -34,7 +38,7 @@ const userSchema = new Schema(
       type: Date,
     },
 
-    image: String,
+    profile: String,
     accountType: String,
 
     // puroseOfAccount: {
