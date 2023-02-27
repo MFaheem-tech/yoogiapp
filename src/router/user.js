@@ -40,6 +40,7 @@ router.put("/change-password", auth, userController.changeCurrentPassword);
 
 router.post("/group", userController.createGroup);
 router.get("/group", userController.viewGroup);
+router.get("/group/recent", auth, userController.recentGroups);
 router.get("/group/:id", userController.getGroupByUser);
 router.get("/group-added/:id", userController.getGroupAddedUser);
 router.get("/group-open/:id", userController.openGroupDetails);

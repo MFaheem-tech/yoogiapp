@@ -403,6 +403,7 @@ export default {
 
       const groupData = group.map((group) => ({
         group: group,
+
         count: group.addMember.length,
       }));
 
@@ -661,6 +662,21 @@ export default {
     try {
       const group = await Group.findByIdAndDelete({ _id: req.params.id });
       return res.status(200).json(group);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
+
+  recentGroups: async (req, res) => {
+    const userId = req.user.user_id;
+    try {
+      const recentGroups = await Group.find({
+        $or: [{ groupOwner: userId }, { addMember: userId }],
+      })
+        .sort({ createdAt: "desc" })
+        .limit(10)
+        .exec();
+      res.status(200).json(recentGroups);
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }
