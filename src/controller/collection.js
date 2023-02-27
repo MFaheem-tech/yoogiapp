@@ -78,6 +78,9 @@ export default {
       })
         .sort({ createdAt: "desc" })
         .limit(10)
+        .populate({ path: "collectionOwner", select: "-password" })
+        .populate({ path: "shareCollection", select: "-password" })
+        .populate({ path: "tags" })
         .exec();
       res.status(200).json(recent);
     } catch (error) {
