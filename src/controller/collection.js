@@ -70,6 +70,21 @@ export default {
     }
   },
 
+  recentCollection: async (req, res) => {
+    const userId = req.user.user_id;
+    try {
+      const recent = await Collection.find({
+        collectionOwner: userId,
+      })
+        .sort({ createdAt: "desc" })
+        .limit(10)
+        .exec();
+      res.status(200).json(recent);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
+
   shareWith: async (req, res) => {
     try {
       const collectionId = req.params.id;

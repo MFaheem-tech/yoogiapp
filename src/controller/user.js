@@ -670,13 +670,24 @@ export default {
   recentGroups: async (req, res) => {
     const userId = req.user.user_id;
     try {
-      const recentGroups = await Group.find({
-        $or: [{ groupOwner: userId }, { addMember: userId }],
+      const group = await Group.find({
+        groupMaker: userId,
       })
         .sort({ createdAt: "desc" })
         .limit(10)
+        .populate({ path: "groupOwner", select: "-password" })
+        .populate({ path: "groupMaker", select: "-password" })
+        .populate({ path: "addMember", select: "-password" })
+        .populate({
+          path: "collections",
+          populate: [
+            { path: "collectionOwner", select: "-password" },
+            { path: "shareCollection", select: "-password" },
+            { path: "tags" },
+          ],
+        })
         .exec();
-      res.status(200).json(recentGroups);
+      res.status(200).json({ group });
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }

@@ -371,6 +371,24 @@ paths:
                 $ref: "#/components/schemas/Group"
         "400": # status code
           description: UnAuthorized Access Denied
+  /users/group/recent:
+    get:
+      tags:
+        - CUSTOMER
+      summary: view all recent groups.
+      description: call this api to view all recent groups.
+      responses:
+        "200": # status code
+          description: return array of recent groups
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+        "400": # status code
+          description: UnAuthorized Access Denied
+      security:
+        - BearerAuth: []
+
   /users/group/{id}/members:
     get:
       tags:

@@ -14,6 +14,7 @@ router.post(
   collectionController.removeSharedMembers
 );
 router.get("/view-collections", collectionController.viewCollection);
+router.get("/recent-collection", auth, collectionController.recentCollection);
 router.get(
   "/share-collection/:id/members",
   collectionController.viewShareCollectionMembers
