@@ -716,6 +716,23 @@ paths:
                 $ref: "#/components/schemas/Collection"
         "400": # status code
           description: UnAuthorized Access Denied
+  /collections/recent-collection:
+    get:
+      tags:
+        - CUSTOMER
+      summary: view all recent collections by token.
+      description: call this api to view all recent collections.
+      responses:
+        "200": # status code
+          description: return array of recent Collections
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Collection"
+        "400": # status code
+          description: UnAuthorized Access Denied
+      security:
+        - BearerAuth: []
   /collections/share-collection/{id}/members:
     get:
       tags:
