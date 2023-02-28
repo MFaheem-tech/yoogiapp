@@ -220,21 +220,17 @@ export default {
   moveCollection: async (req, res) => {
     try {
       const { collectionId, fromGroupId, toGroupId } = req.body;
-
       // Retrieve the source and destination groups
       const fromGroup = fromGroupId ? await Group.findById(fromGroupId) : null;
       const toGroup = await Group.findById(toGroupId);
-
       // Retrieve the collection to be moved
       const collection = await Collection.findById(collectionId);
-
       // Check if the collection already exists in the destination group
       if (toGroup.collections.includes(collectionId)) {
         return res
           .status(400)
           .json({ error: "Collection already exists in destination group" });
       }
-
       // Remove the collection ID from the source group (if applicable) and add it to the destination group
       const objectId = mongoose.Types.ObjectId(collectionId); // Convert collectionId to ObjectId instance
       if (fromGroup) {
@@ -246,11 +242,9 @@ export default {
       }
       toGroup.collections.push(objectId);
       await toGroup.save();
-
       res.json({ message: "Collection moved successfully" });
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Server error" });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
     }
   },
 
@@ -270,6 +264,16 @@ export default {
       );
 
       return res.status(200).json(updateCollection);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
+  deleteCollection: async (req, res) => {
+    try {
+      const collection = await Collection.findByIdAndDelete({
+        _id: req.params.id,
+      });
+      return res.status(200).json(collection);
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }
