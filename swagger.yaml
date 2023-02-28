@@ -787,6 +787,28 @@ paths:
       responses:
         default:
           description: successful operation
+  /collections/move-collection:
+    put:
+      tags:
+        - CUSTOMER
+      summary: Move collection from one group to another group or move your collection in any group if it is not already exist in any other group.
+      description: call this api to Move collection from one group to another group..
+      requestBody:
+        description: Please provide these id's or toGroup id and collectionId.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MoveCollection"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/MoveCollection"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/MoveCollection"
+        required: true
+      responses:
+        default:
+          description: successful operation
   /collections/collection/{id}:
     put:
       tags:
@@ -1096,6 +1118,18 @@ components:
         ownerToRemove:
           type: string
           example: 63c138d2ce83161c6a418392
+    MoveCollection:
+      type: object
+      properties:
+        collectionId:
+          type: string
+          example: 63c138d2ce83161c6a418392
+        fromGroupId:
+          type: string
+          example: 63c138d2ce83161c6a418392
+        toGroupId:
+          type: string
+          example: 63c138d2ce83161c6a418392
     VerifyCOde:
       type: object
       properties:
@@ -1378,6 +1412,13 @@ components:
           schema:
             items:
               $ref: "#/components/schemas/Collection"
+    MoveCollection:
+      description: MoveCollection
+      content:
+        application/json:
+          schema:
+            items:
+              $ref: "#/components/schemas/MoveCollection"
     Category:
       description: Category
       content:

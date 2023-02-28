@@ -23,6 +23,7 @@ router.delete(
   "/group/:groupId/collection/:collectionId",
   collectionController.removeCollectionFromGroup
 );
+router.put("/move-collection", collectionController.moveCollection);
 router.put("/collection/:id", collectionController.editCollection);
 
 export default router;

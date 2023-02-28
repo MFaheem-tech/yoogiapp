@@ -2,6 +2,7 @@ import { User, Collection, Group, Tag, File } from "../models/index.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { sendEmailNow } from "../helper/sendEmail.js";
+import mongoose from "mongoose";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -212,6 +213,44 @@ export default {
       return res.status(200).json({ msg: "Collection removed from group" });
     } catch (error) {
       return res.status(500).send({ error: error.message });
+    }
+  },
+
+  // app.put('/groups/:fromGroupId/collections/:collectionId/move-to/:toGroupId',
+  moveCollection: async (req, res) => {
+    try {
+      const { collectionId, fromGroupId, toGroupId } = req.body;
+
+      // Retrieve the source and destination groups
+      const fromGroup = fromGroupId ? await Group.findById(fromGroupId) : null;
+      const toGroup = await Group.findById(toGroupId);
+
+      // Retrieve the collection to be moved
+      const collection = await Collection.findById(collectionId);
+
+      // Check if the collection already exists in the destination group
+      if (toGroup.collections.includes(collectionId)) {
+        return res
+          .status(400)
+          .json({ error: "Collection already exists in destination group" });
+      }
+
+      // Remove the collection ID from the source group (if applicable) and add it to the destination group
+      const objectId = mongoose.Types.ObjectId(collectionId); // Convert collectionId to ObjectId instance
+      if (fromGroup) {
+        fromGroup.collections = fromGroup.collections.filter(
+          (id) => !id.equals(objectId)
+        );
+        fromGroup.markModified("collections");
+        await fromGroup.save();
+      }
+      toGroup.collections.push(objectId);
+      await toGroup.save();
+
+      res.json({ message: "Collection moved successfully" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Server error" });
     }
   },
 
