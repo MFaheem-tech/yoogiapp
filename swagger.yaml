@@ -733,6 +733,40 @@ paths:
           description: UnAuthorized Access Denied
       security:
         - BearerAuth: []
+  /collections/share-from-me:
+    get:
+      tags:
+        - CUSTOMER
+      summary: view all collections shared by user by token.
+      description: call this api to view all your own shared collections .
+      responses:
+        "200": # status code
+          description: return array of shared Collections
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Collection"
+        "400": # status code
+          description: UnAuthorized Access Denied
+      security:
+        - BearerAuth: []
+  /collections/share-to-me:
+    get:
+      tags:
+        - CUSTOMER
+      summary: view all collections shared with user by token.
+      description: call this api to view all collections shared with user .
+      responses:
+        "200": # status code
+          description: return array of shared Collections
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Collection"
+        "400": # status code
+          description: UnAuthorized Access Denied
+      security:
+        - BearerAuth: []
   /collections/share-collection/{id}/members:
     get:
       tags:
@@ -834,6 +868,22 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               $ref: "#/components/schemas/Collection"
+      responses:
+        default:
+          description: successful operation
+    delete:
+      tags:
+        - CUSTOMER
+      summary: delete collection
+      description: call this api to delete collection
+      parameters:
+        - name: id
+          in: path
+          description: id is required
+          required: true
+          schema:
+            type: string
+            example: 631b0b88970b8b1d149f61d6
       responses:
         default:
           description: successful operation

@@ -88,6 +88,35 @@ export default {
       return res.status(500).json({ error: error.message });
     }
   },
+  ShareFromMe: async (req, res) => {
+    const userId = req.user.user_id;
+    try {
+      const collections = await Collection.find({
+        collectionOwner: userId,
+        share: true,
+      })
+        .populate({ path: "collectionOwner", select: "-password" })
+        .populate({ path: "shareCollection", select: "-password" })
+        .populate({ path: "tags" })
+        .exec();
+      res.status(200).json(collections);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
+  ShareByMe: async (req, res) => {
+    const userId = req.user.user_id;
+    try {
+      const collections = await Collection.find({ shareCollection: userId })
+        .populate({ path: "collectionOwner", select: "-password" })
+        .populate({ path: "shareCollection", select: "-password" })
+        .populate({ path: "tags" })
+        .exec();
+      res.status(200).json(collections);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
 
   shareWith: async (req, res) => {
     try {
