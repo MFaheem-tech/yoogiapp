@@ -27,5 +27,6 @@ router.delete(
 );
 router.put("/move-collection", collectionController.moveCollection);
 router.put("/collection/:id", collectionController.editCollection);
+router.delete("/collection/:id", collectionController.deleteCollection);
 
 export default router;
