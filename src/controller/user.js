@@ -364,6 +364,12 @@ export default {
     try {
       const { body } = req;
       const newGroup = await Group.create(body);
+      // Update the totalGroups field in the user document
+      await User.findByIdAndUpdate(
+        body.groupMaker,
+        { $inc: { totalGroups: 1 } },
+        { new: true }
+      );
       return res.status(200).json(newGroup);
     } catch (error) {
       return res.status(500).send({ error: error.message });
@@ -661,6 +667,16 @@ export default {
   deleteGroup: async (req, res) => {
     try {
       const group = await Group.findByIdAndDelete({ _id: req.params.id });
+      if (!group) {
+        return res.status(404).json({ error: "Collection not found" });
+      }
+      const user = await User.findByIdAndUpdate(
+        group.groupMaker,
+        { $inc: { totalGroups: -1 } },
+        { new: true }
+      );
+
+      await user.save();
       return res.status(200).json(group);
     } catch (error) {
       return res.status(500).json({ error: error.message });

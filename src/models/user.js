@@ -27,9 +27,21 @@ const userSchema = new Schema(
       enum: ["user", "admin"],
     },
     cover: String,
-    totalFiles: String,
-    totalCollections: String,
-    totalGroups: String,
+    // totalFiles: String,
+    // totalCollections: String,
+    // totalGroups: String,
+    totalFiles: {
+      type: Number,
+      default: 0,
+    },
+    totalCollections: {
+      type: Number,
+      default: 0,
+    },
+    totalGroups: {
+      type: Number,
+      default: 0,
+    },
     passwordResetCode: Number,
     resetCode: Number,
     resetCodeExpirationTime: {

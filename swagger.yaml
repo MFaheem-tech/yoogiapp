@@ -1236,6 +1236,15 @@ components:
         cover:
           type: string
           example: abc.jpg
+        totalFiles:
+          type: string
+          example: 0
+        totalCollections:
+          type: string
+          example: 0
+        totalGroups:
+          type: string
+          example: 0
 
         accountType:
           type: String,

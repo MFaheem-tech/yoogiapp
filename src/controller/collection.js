@@ -51,10 +51,18 @@ export default {
       const group = await Group.findById(req.body.group);
 
       // Add the new collection to the group's collections array
-      group.collections.push(savedCollection._id);
+      if (group) {
+        group.collections.push(savedCollection._id);
 
-      // Save the updated group to the database
-      await group.save();
+        // Save the updated group to the database
+        await group.save();
+      }
+      // Update the totalCollections field in the user document
+      await User.findByIdAndUpdate(
+        req.body.collectionOwner,
+        { $inc: { totalCollections: 1 } },
+        { new: true }
+      );
 
       // Return the saved collection
       res.status(200).json(savedCollection);
@@ -302,6 +310,17 @@ export default {
       const collection = await Collection.findByIdAndDelete({
         _id: req.params.id,
       });
+
+      if (!collection) {
+        return res.status(404).json({ error: "Collection not found" });
+      }
+      const user = await User.findByIdAndUpdate(
+        collection.collectionOwner,
+        { $inc: { totalCollections: -1 } },
+        { new: true }
+      );
+
+      await user.save();
       return res.status(200).json(collection);
     } catch (error) {
       return res.status(500).json({ error: error.message });
