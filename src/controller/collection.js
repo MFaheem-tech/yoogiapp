@@ -279,6 +279,9 @@ export default {
       }
       toGroup.collections.push(objectId);
       await toGroup.save();
+      //  updating collection group field
+      collection.group = toGroup._id;
+      await collection.save();
       res.json({ message: "Collection moved successfully" });
     } catch (error) {
       return res.status(500).json({ error: error.message });
