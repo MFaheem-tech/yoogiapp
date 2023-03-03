@@ -16,7 +16,7 @@ router.post(
 router.get("/view-collections", collectionController.viewCollection);
 router.get("/recent-collection", auth, collectionController.recentCollection);
 router.get("/share-from-me", auth, collectionController.ShareFromMe);
-router.get("/share-to-me", auth, collectionController.ShareByMe);
+router.get("/share-to-me", auth, collectionController.ShareToMe);
 router.get(
   "/share-collection/:id/members",
   collectionController.viewShareCollectionMembers
@@ -24,6 +24,11 @@ router.get(
 router.delete(
   "/group/:groupId/collection/:collectionId",
   collectionController.removeCollectionFromGroup
+);
+router.get(
+  "/collections/:filterType",
+  auth,
+  collectionController.collectionFiltering
 );
 router.put("/move-collection", collectionController.moveCollection);
 router.put("/collection/:id", collectionController.editCollection);
