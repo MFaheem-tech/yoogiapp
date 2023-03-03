@@ -6,6 +6,7 @@ const FileSchema = new Schema(
   {
     fileName: String,
     fileType: String,
+    url: String,
     tags: [
       {
         type: Schema.Types.ObjectId,
@@ -15,14 +16,13 @@ const FileSchema = new Schema(
     path: String,
     status: {
       type: String,
-      enum: ["active", "daleted"],
+      enum: ["active", "deleted"],
       default: "Active",
     },
     fileOwner: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-    // shareWith: [String], // needs to be removed..
     description: String,
     schedule: {
       date: Date,

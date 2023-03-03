@@ -37,6 +37,12 @@ const collectionSchema = new Schema(
         ref: "User",
       },
     ],
+    files: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "File",
+      },
+    ],
   },
 
   { timestamps: true }

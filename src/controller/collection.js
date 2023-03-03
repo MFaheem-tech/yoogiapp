@@ -296,119 +296,116 @@ export default {
       return res.status(500).json({ error: error.message });
     }
   },
-
   collectionFiltering: async (req, res) => {
     const userId = req.user.user_id;
-    const { filterType, groupId } = req.params;
+    const { filterType } = req.params;
+    const groupId = req.query.groupId;
 
     try {
-      let collections;
-      if (filterType === "all") {
-        const matchQuery = { addMember: mongoose.Types.ObjectId(userId) };
-        if (groupId) {
-          matchQuery._id = mongoose.Types.ObjectId(groupId);
-        }
-        collections = await Group.aggregate([
-          { $match: matchQuery },
-          {
-            $lookup: {
-              from: "collections",
-              localField: "collections",
-              foreignField: "_id",
-              as: "collections",
-            },
-          },
-          { $unwind: "$collections" },
-          {
-            $project: {
-              _id: "$collections._id",
-              name: "$collections.name",
-              description: "$collections.description",
-              tags: "$collections.tags",
-              collectionOwner: "$collections.collectionOwner",
-              shareCollection: "$collections.shareCollection",
-              createdAt: "$collections.createdAt",
-              updatedAt: "$collections.updatedAt",
-            },
-          },
-        ]);
-      } else if (filterType === "shared-from-me") {
-        collections = await Group.aggregate([
-          { $match: { addMember: mongoose.Types.ObjectId(userId) } },
-          {
-            $lookup: {
-              from: "collections",
-              localField: "collections",
-              foreignField: "_id",
-              as: "collections",
-            },
-          },
-          { $unwind: "$collections" },
-          {
-            $match: {
-              "collections.collectionOwner": mongoose.Types.ObjectId(userId),
-              "collections.share": true,
-            },
-          },
-          {
-            $project: {
-              _id: "$collections._id",
-              name: "$collections.name",
-              description: "$collections.description",
-              tags: "$collections.tags",
-              collectionOwner: "$collections.collectionOwner",
-              shareCollection: "$collections.shareCollection",
-              createdAt: "$collections.createdAt",
-              updatedAt: "$collections.updatedAt",
-            },
-          },
-        ]);
-      } else if (filterType === "shared-to-me") {
-        collections = await Group.aggregate([
-          { $match: { addMember: mongoose.Types.ObjectId(userId) } },
-          {
-            $lookup: {
-              from: "collections",
-              localField: "collections",
-              foreignField: "_id",
-              as: "collections",
-            },
-          },
-          { $unwind: "$collections" },
-          {
-            $match: {
-              "collections.shareCollection": mongoose.Types.ObjectId(userId),
-            },
-          },
-          {
-            $project: {
-              _id: "$collections._id",
-              name: "$collections.name",
-              description: "$collections.description",
-              tags: "$collections.tags",
-              collectionOwner: "$collections.collectionOwner",
-              shareCollection: "$collections.shareCollection",
-              createdAt: "$collections.createdAt",
-              updatedAt: "$collections.updatedAt",
-            },
-          },
-        ]);
-      } else {
-        return res.status(400).json({ error: "Invalid filter type" });
+      let filter = { addMember: userId };
+
+      if (groupId) {
+        filter.group = groupId;
       }
 
-      const populatedCollections = await Collection.populate(collections, [
-        { path: "collectionOwner", select: "-password" },
-        { path: "shareCollection", select: "-password" },
-        { path: "tags" },
-      ]);
+      let collections;
 
-      res.status(200).json(populatedCollections);
+      switch (filterType) {
+        case "all":
+          collections = await Collection.find(filter)
+            .populate("collectionOwner", "-password")
+            .populate("shareCollection", "-password")
+            .populate("tags")
+            .populate({
+              path: "group",
+              select: "groupName",
+              populate: {
+                path: "collections",
+                select: "collectionName",
+              },
+            });
+          break;
+        case "shared-from-me":
+          filter.collectionOwner = userId;
+          filter.shareCollection = { $ne: null };
+          collections = await Collection.find(filter)
+            .populate("collectionOwner", "-password")
+            .populate("shareCollection", "-password")
+            .populate("tags")
+            .populate({
+              path: "group",
+              select: "groupName",
+              populate: {
+                path: "collections",
+                select: "collectionName",
+              },
+            });
+          break;
+        case "shared-to-me":
+          filter.shareCollection = userId;
+          collections = await Collection.find(filter)
+            .populate("collectionOwner", "-password")
+            .populate("shareCollection", "-password")
+            .populate("tags")
+            .populate({
+              path: "group",
+              select: "groupName",
+              populate: {
+                path: "collections",
+                select: "collectionName",
+              },
+            });
+          break;
+        default:
+          return res.status(400).json({ error: "Invalid filter type" });
+      }
+
+      res.status(200).json(collections);
     } catch (error) {
       return res.status(500).json({ error: error.message });
     }
   },
 
+  // collectionFiltering: async (req, res) => {
+  //   const userId = req.user.user_id;
+  //   const { filterType } = req.params;
+  //   const groupId = req.query.groupId;
+
+  //   try {
+  //     let collections;
+  //     let filter = { addMember: userId };
+
+  //     if (groupId) {
+  //       filter.collections = groupId;
+  //     }
+
+  //     if (filterType === "all") {
+  //       collections = await Collection.find(filter)
+  //         .populate("collectionOwner", "-password")
+  //         .populate("shareCollection", "-password")
+  //         .populate("tags");
+  //     } else if (filterType === "shared-from-me") {
+  //       filter.collectionOwner = userId;
+  //       filter.shareCollection = { $ne: null };
+  //       collections = await Collection.find(filter)
+  //         .populate("collectionOwner", "-password")
+  //         .populate("shareCollection", "-password")
+  //         .populate("tags");
+  //     } else if (filterType === "shared-to-me") {
+  //       filter.shareCollection = userId;
+  //       collections = await Collection.find(filter)
+  //         .populate("collectionOwner", "-password")
+  //         .populate("shareCollection", "-password")
+  //         .populate("tags");
+  //     } else {
+  //       return res.status(400).json({ error: "Invalid filter type" });
+  //     }
+
+  //     res.status(200).json(collections);
+  //   } catch (error) {
+  //     return res.status(500).json({ error: error.message });
+  //   }
+  // },
   editCollection: async (req, res) => {
     try {
       const { body } = req;
