@@ -9,6 +9,7 @@ const router = Router();
 router.post("/add-file", fileController.addFile);
 router.delete(
   "/collection/:collectionId/file/:fileId",
+  auth,
   fileController.removeFileFromCollection
 );
 

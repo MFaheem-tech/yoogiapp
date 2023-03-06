@@ -43,13 +43,61 @@ export default {
       return res.status(500).send({ error: error.message });
     }
   },
+  // removeFileFromCollection: async (req, res) => {
+  //   try {
+  //     const collectionId = req.params.collectionId;
+  //     const fileId = req.params.fileId;
+  //     const collectionOwner = req.body.collectionOwner;
+
+  //     // Find the collection by its ID and check if the user is the collection owner
+  //     const collection = await Collection.findById(collectionId);
+  //     console.log(collection.collectionName);
+
+  //     if (!collection) {
+  //       return res.status(400).json({ msg: "Collection not found" });
+  //     }
+
+  //     if (collection.collectionOwner.toString() !== collectionOwner) {
+  //       return res
+  //         .status(401)
+  //         .json({ msg: "Only Collection owner have the authority" });
+  //     }
+
+  //     // Find the file by its ID and check if it belongs to the collection
+  //     const file = await File.findOne({
+  //       _id: fileId,
+  //       where: collectionId,
+  //     });
+
+  //     console.log(fileId);
+  //     if (!file) {
+  //       return res
+  //         .status(400)
+  //         .json({ msg: "File not found in the specified collection" });
+  //     }
+
+  //     // Remove the file from the collection
+  //     collection.files = collection.files.filter(
+  //       (f) => f.toString() !== fileId
+  //     );
+  //     await collection.save();
+
+  //     // Remove the collection from the file
+  //     file.where = file.where.filter((w) => w.toString() !== collectionId);
+  //     await file.save();
+
+  //     return res.status(200).json({ msg: "File removed from collection" });
+  //   } catch (error) {
+  //     return res.status(500).send({ error: error.message });
+  //   }
+  // },
   removeFileFromCollection: async (req, res) => {
     try {
       const collectionId = req.params.collectionId;
       const fileId = req.params.fileId;
-      const collectionOwner = req.body.collectionOwner;
+      const currentUser = req.user.user_id;
 
-      // Find the collection by its ID and check if the user is the collection owner
+      // Find the collection by its ID
       const collection = await Collection.findById(collectionId);
       console.log(collection.collectionName);
 
@@ -57,20 +105,25 @@ export default {
         return res.status(400).json({ msg: "Collection not found" });
       }
 
-      if (collection.collectionOwner.toString() !== collectionOwner) {
+      // Check if the current user is the group owner, collection owner, or file owner
+      const isGroupOwner = currentUser.groups.includes(collection.group);
+      const isCollectionOwner =
+        collection.collectionOwner.toString() === currentUser._id.toString();
+      const file = await File.findById(fileId);
+      const isFileOwner = file.owner.toString() === currentUser._id.toString();
+
+      if (!isGroupOwner && !isCollectionOwner && !isFileOwner) {
         return res
           .status(401)
-          .json({ msg: "Only Collection owner have the authority" });
+          .json({
+            msg: "Only group owner, collection owner, or file owner have the authority",
+          });
       }
 
-      // Find the file by its ID and check if it belongs to the collection
-      const file = await File.findOne({
-        _id: fileId,
-        where: collectionId,
-      });
+      // Check if the file belongs to the collection
+      const isInCollection = file.where.includes(collectionId);
 
-      console.log(fileId);
-      if (!file) {
+      if (!isInCollection) {
         return res
           .status(400)
           .json({ msg: "File not found in the specified collection" });

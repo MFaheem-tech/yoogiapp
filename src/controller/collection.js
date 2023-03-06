@@ -7,22 +7,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export default {
-  // ################################### Collections
-  //   addCollection: async (req, res) => {
-  //     try {
-  //       const { body } = req;
-  //       const exists = await Collection.findOne({
-  //         collectionName: body.collectionName,
-  //       });
-  //       if (exists) {
-  //         return res.status(400).json({ msg: "Collection already exists" });
-  //       }
-  //       const collection = await Collection.create(body);
-  //       return res.status(200).json(collection);
-  //     } catch (error) {
-  //       return res.status(500).send({ error: error.message });
-  //     }
-  //   },
   addCollection: async (req, res) => {
     try {
       // Check if any shareCollection IDs were provided
@@ -218,7 +202,11 @@ export default {
     try {
       const collections = await Collection.find({
         $or: [{ collectionOwner: userId }, { shareCollection: userId }],
-      });
+      })
+        .populate({ path: "collectionOwner", select: "-password" })
+        .populate({ path: "shareCollection", select: "-password" })
+        .populate({ path: "tags" })
+        .exec();
       // }).populate("tags").populate("group").populate("files"); // populate any referenced collections to get their details
       res.status(200).json({ collections });
     } catch (err) {
