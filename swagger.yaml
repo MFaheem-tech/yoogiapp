@@ -784,6 +784,23 @@ paths:
       responses:
         default:
           description: successful operation
+  /collections/current-user-collection:
+    get:
+      tags:
+        - CUSTOMER
+      summary: view all collections of current user's by token (created by him or shared with him).
+      description: call this api to view all user collections.
+      responses:
+        "200": # status code
+          description: return array of Collections
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Collection"
+        "400": # status code
+          description: UnAuthorized Access Denied
+      security:
+        - BearerAuth: []
   /collections/group/{groupId}/collection/{collectionId}:
     delete:
       tags:
@@ -887,7 +904,7 @@ paths:
       responses:
         default:
           description: successful operation
-  /users/file:
+  /files/add-file:
     post:
       tags:
         - CUSTOMER
@@ -921,7 +938,7 @@ paths:
     get:
       tags:
         - CUSTOMER
-      summary: view all collections.
+      summary: view all files.
       description: call this api to view all files.
       responses:
         "200": # status code
@@ -1245,7 +1262,6 @@ components:
         totalGroups:
           type: string
           example: 0
-
         accountType:
           type: String,
           example: Business

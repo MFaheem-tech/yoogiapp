@@ -213,6 +213,20 @@ export default {
     }
   },
 
+  currentUserCollections: async (req, res) => {
+    const userId = req.user.user_id;
+    try {
+      const collections = await Collection.find({
+        $or: [{ collectionOwner: userId }, { shareCollection: userId }],
+      });
+      // }).populate("tags").populate("group").populate("files"); // populate any referenced collections to get their details
+      res.status(200).json({ collections });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Error fetching collections" });
+    }
+  },
+
   removeCollectionFromGroup: async (req, res) => {
     try {
       const groupId = req.params.groupId;
@@ -261,8 +275,30 @@ export default {
       return res.status(500).send({ error: error.message });
     }
   },
+  openCollectionDetails: async (req, res) => {
+    try {
+      const collectionId = req.params.id;
+      const collection = await Collection.findById(collectionId)
+        .populate({ path: "collectionOwner", select: "-password" })
+        // .populate({ path: "groupMaker", select: "-password" })
+        // .populate({ path: "addMember", select: "-password" })
+        .populate({
+          path: "files",
+          populate: [
+            { path: "fileOwner", select: "-password" },
+            { path: "where" },
+            { path: "tags" },
+          ],
+        });
+      if (!collection) {
+        return res.status(400).json({ msg: "Collection not found" });
+      }
+      return res.status(200).json({ collection });
+    } catch (error) {
+      return res.status(500).send({ error: error.message });
+    }
+  },
 
-  // app.put('/groups/:fromGroupId/collections/:collectionId/move-to/:toGroupId',
   moveCollection: async (req, res) => {
     try {
       const { collectionId, fromGroupId, toGroupId } = req.body;

@@ -7,5 +7,9 @@ import upload from "../helper/uploader.js";
 
 const router = Router();
 router.post("/add-file", fileController.addFile);
+router.delete(
+  "/collection/:collectionId/file/:fileId",
+  fileController.removeFileFromCollection
+);
 
 export default router;

@@ -21,6 +21,11 @@ router.get(
   "/share-collection/:id/members",
   collectionController.viewShareCollectionMembers
 );
+router.get(
+  "/current-user-collection",
+  auth,
+  collectionController.currentUserCollections
+);
 router.delete(
   "/group/:groupId/collection/:collectionId",
   collectionController.removeCollectionFromGroup
@@ -30,6 +35,7 @@ router.get(
   auth,
   collectionController.collectionFiltering
 );
+router.get("/collection-open/:id", collectionController.openCollectionDetails);
 router.put("/move-collection", collectionController.moveCollection);
 router.put("/collection/:id", collectionController.editCollection);
 router.delete("/collection/:id", collectionController.deleteCollection);
