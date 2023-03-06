@@ -17,7 +17,7 @@ const FileSchema = new Schema(
     status: {
       type: String,
       enum: ["active", "deleted"],
-      default: "Active",
+      default: "active",
     },
     fileOwner: {
       type: Schema.Types.ObjectId,

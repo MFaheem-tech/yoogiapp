@@ -838,6 +838,23 @@ paths:
       responses:
         default:
           description: successful operation
+  /collections/collection-open/{id}:
+    get:
+      tags:
+        - CUSTOMER
+      summary: open collection details and see all files in collection.
+      description: call this api to open collection details
+      parameters:
+        - name: id
+          in: path
+          description: id is required
+          required: true
+          schema:
+            type: string
+            example: 631b0b88970b8b1d149f61d6
+      responses:
+        default:
+          description: successful operation
   /collections/move-collection:
     put:
       tags:
