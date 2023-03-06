@@ -949,6 +949,32 @@ paths:
                 $ref: "#/components/schemas/File"
         "400": # status code
           description: UnAuthorized Access Denied
+  /files/collection/{collectionId}/file/{fileId}:
+    delete:
+      tags:
+        - CUSTOMER
+      summary: Remove file  from the collection by collection owner or file owner by providing token.
+      description: call this api to remove file from the collection .
+      parameters:
+        - name: collectionId
+          in: path
+          description: Collection id is required
+          required: true
+          schema:
+            type: string
+            example: 631b0b88970b8b1d149f61d6
+        - name: fileId
+          in: path
+          description: File id is required
+          required: true
+          schema:
+            type: string
+            example: 631b0b88970b8b1d149f61d6
+      responses:
+        default:
+          description: successful operation
+      security:
+        - BearerAuth: []
   /users/file/{id}:
     get:
       tags:
