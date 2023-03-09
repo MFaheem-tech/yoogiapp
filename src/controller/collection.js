@@ -322,8 +322,8 @@ export default {
   },
   collectionFiltering: async (req, res) => {
     const userId = req.user.user_id;
-    const { groupId } = req.params;
-    const { filterType } = req.query;
+    // const { groupId } = req.params;
+    const { filterType, groupId } = req.query;
 
     let groups;
     if (groupId) {
@@ -360,46 +360,50 @@ export default {
 
     return res.status(200).send(collections);
   },
+
   // collectionFiltering: async (req, res) => {
   //   const userId = req.user.user_id;
-  //   const { filterType } = req.params;
-  //   const groupId = req.query.groupId;
+  //   const { groupId } = req.params;
+  //   const { filterType } = req.query;
 
-  //   try {
-  //     let collections;
-  //     let filter = { addMember: userId };
-
-  //     if (groupId) {
-  //       filter.collections = groupId;
+  //   let groups;
+  //   if (groupId) {
+  //     const group = await Group.findOne({ _id: groupId, addMember: userId });
+  //     if (!group) {
+  //       return res
+  //         .status(404)
+  //         .send({ msg: "Group not found or user is not a member" });
   //     }
-
-  //     if (filterType === "all") {
-  //       collections = await Collection.find(filter)
-  //         .populate("collectionOwner", "-password")
-  //         .populate("shareCollection", "-password")
-  //         .populate("tags");
-  //     } else if (filterType === "shared-from-me") {
-  //       filter.collectionOwner = userId;
-  //       filter.shareCollection = { $ne: null };
-  //       collections = await Collection.find(filter)
-  //         .populate("collectionOwner", "-password")
-  //         .populate("shareCollection", "-password")
-  //         .populate("tags");
-  //     } else if (filterType === "shared-to-me") {
-  //       filter.shareCollection = userId;
-  //       collections = await Collection.find(filter)
-  //         .populate("collectionOwner", "-password")
-  //         .populate("shareCollection", "-password")
-  //         .populate("tags");
-  //     } else {
-  //       return res.status(400).json({ error: "Invalid filter type" });
-  //     }
-
-  //     res.status(200).json(collections);
-  //   } catch (error) {
-  //     return res.status(500).json({ error: error.message });
+  //     groups = [group];
+  //   } else {
+  //     groups = await Group.find({ addMember: userId });
   //   }
+
+  //   const collections = [];
+  //   for (const group of groups) {
+  //     let groupCollections;
+  //     if (filterType === "sharedFromMe") {
+  //       groupCollections = await Collection.find({
+  //         _id: { $in: group.collections },
+  //         collectionOwner: userId,
+  //         share: true,
+  //       });
+  //     } else if (filterType === "sharedToMe") {
+  //       groupCollections = await Collection.find({
+  //         _id: { $in: group.collections },
+  //         shareCollection: userId,
+  //       });
+  //     } else {
+  //       groupCollections = await Collection.find({
+  //         _id: { $in: group.collections },
+  //       });
+  //     }
+  //     collections.push(...groupCollections);
+  //   }
+
+  //   return res.status(200).send(collections);
   // },
+
   editCollection: async (req, res) => {
     try {
       const { body } = req;
