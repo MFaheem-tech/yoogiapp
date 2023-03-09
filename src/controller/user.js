@@ -709,56 +709,12 @@ export default {
     }
   },
 
-  shareFile: async (req, res) => {
-    try {
-      const { body } = req;
-      const exists = await File.findOne({ name: body.name });
-      if (exists) {
-        return res.status(400).json({ msg: "This is already exists" });
-      }
-      const file = await File.create(body);
-      return res.status(200).json(file);
-    } catch (error) {
-      return res.status(500).send({ error: error.message });
-    }
-  },
-
   viewShareFile: async (req, res) => {
     try {
       const file = await File.find();
       return res.status(200).json(file);
     } catch (error) {
       return res.status(500).send({ error: error.message });
-    }
-  },
-
-  viewShareFileDetails: async (req, res) => {
-    try {
-      const file = await File.find({ _id: req.params.id });
-      return res.status(200).json(file);
-    } catch (error) {
-      return res.status(500).send({ error: error.message });
-    }
-  },
-
-  editShareFile: async (req, res) => {
-    try {
-      const { body } = req;
-      const updateFile = await File.findByIdAndUpdate(
-        {
-          _id: req.params.id,
-        },
-        {
-          $set: body,
-        },
-        {
-          new: true,
-        }
-      );
-
-      return res.status(200).json(updateFile);
-    } catch (error) {
-      return res.status(500).json({ error: error.message });
     }
   },
 

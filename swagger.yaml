@@ -966,6 +966,45 @@ paths:
                 $ref: "#/components/schemas/File"
         "400": # status code
           description: UnAuthorized Access Denied
+  /files/recent-file:
+    get:
+      tags:
+        - CUSTOMER
+      summary: view all recent files by token.
+      description: call this api to view all recent files.
+      responses:
+        "200": # status code
+          description: return array of recent files.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/File"
+        "400": # status code
+          description: UnAuthorized Access Denied
+      security:
+        - BearerAuth: []
+  /files/move-file:
+    put:
+      tags:
+        - CUSTOMER
+      summary: Move file from one collection to another collection .
+      description: call this api to Move file from one collection to another collection..
+      requestBody:
+        description: Please provide these id's.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MoveFile"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/MoveFile"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/MoveFile"
+        required: true
+      responses:
+        default:
+          description: successful operation
   /files/collection/{collectionId}/file/{fileId}:
     delete:
       tags:
@@ -1238,6 +1277,18 @@ components:
           type: string
           example: 63c138d2ce83161c6a418392
         toGroupId:
+          type: string
+          example: 63c138d2ce83161c6a418392
+    MoveFile:
+      type: object
+      properties:
+        fileId:
+          type: string
+          example: 63c138d2ce83161c6a418392
+        fromCollectionId:
+          type: string
+          example: 63c138d2ce83161c6a418392
+        ToCollectionId:
           type: string
           example: 63c138d2ce83161c6a418392
     VerifyCOde:
@@ -1537,6 +1588,13 @@ components:
           schema:
             items:
               $ref: "#/components/schemas/MoveCollection"
+    MoveFile:
+      description: MoveFile
+      content:
+        application/json:
+          schema:
+            items:
+              $ref: "#/components/schemas/MoveFile"
     Category:
       description: Category
       content:

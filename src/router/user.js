@@ -51,12 +51,7 @@ router.put("/group/:id/transfer-owner", userController.transferOwner);
 router.put("/group/:id/remove-owner", userController.removeOwner);
 router.put("/group/:id", userController.editGroup);
 router.delete("/group/:id", userController.deleteGroup);
-
-router.post("/file", userController.shareFile);
 router.get("/file", userController.viewShareFile);
-router.get("/file/:id", userController.viewShareFileDetails);
-router.put("/file/:id", userController.editShareFile);
-
 //  tags
 router.post("/tag", userController.createTag);
 router.get("/tag", userController.viewTags);

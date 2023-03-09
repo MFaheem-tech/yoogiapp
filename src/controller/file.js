@@ -1,4 +1,11 @@
-import { User, Collection, Group, Tag, File } from "../models/index.js";
+import {
+  User,
+  Collection,
+  Group,
+  Tag,
+  TextFile,
+  File,
+} from "../models/index.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { sendEmailNow } from "../helper/sendEmail.js";
@@ -43,6 +50,74 @@ export default {
       return res.status(500).send({ error: error.message });
     }
   },
+  textFile: async (req, res) => {
+    try {
+      // Create a new TextFile document with the text data in the request body
+      const file = new TextFile({
+        textData: req.body.textData,
+        fileType: "text",
+        __t: "text",
+      });
+
+      // Save the TextFile document to MongoDB
+      await file.save();
+
+      res.status.json({ msg: "Text data saved to MongoDB" });
+    } catch (error) {
+      return res.status(500).send({ error: error.message });
+    }
+  },
+  recentFile: async (req, res) => {
+    const userId = req.user.user_id;
+    try {
+      const recent = await File.find({
+        fileOwner: userId,
+      })
+        .sort({ createdAt: "desc" })
+        .limit(10)
+        .populate({ path: "fileOwner", select: "-password" })
+        .populate({ path: "where", select: "-password" })
+        .populate({ path: "tags" })
+        .exec();
+      res.status(200).json(recent);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
+  moveFile: async (req, res) => {
+    try {
+      const { fileId, fromCollectionId, ToCollectionId } = req.body;
+      const ToCollection = await Collection.findById(ToCollectionId);
+      const fromCollection = await Collection.findById(fromCollectionId);
+      const file = await File.findById(fileId);
+
+      if (!ToCollection) {
+        return res
+          .status(400)
+          .json({ msg: "Destination collection not found" });
+      }
+      if (ToCollection.files.includes(fileId)) {
+        return res
+          .status(400)
+          .json({ msg: "File already exists in destination collection" });
+      }
+      const objectId = mongoose.Types.ObjectId(fileId);
+      if (fromCollection) {
+        fromCollection.files = fromCollection.files.filter(
+          (id) => !id.equals(objectId)
+        );
+        fromCollection.markModified("files");
+        await fromCollection.save();
+      }
+      ToCollection.files.push(objectId);
+      await ToCollection.save();
+      file.where = ToCollection._id;
+      await file.save();
+      return res.status(200).json({ msg: "File moved successfully" });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
   removeFileFromCollection: async (req, res) => {
     try {
       const collectionId = req.params.collectionId;
@@ -61,11 +136,9 @@ export default {
         collection.collectionOwner !== currentUser._id &&
         collection.files.every((file) => file.fileOwner !== currentUser._id)
       ) {
-        return res
-          .status(401)
-          .json({
-            msg: "Unauthorized: Only collection owner or file owner can remove file",
-          });
+        return res.status(401).json({
+          msg: "Unauthorized: Only collection owner or file owner can remove file",
+        });
       }
 
       // Find the file by its ID and check if it belongs to the collection

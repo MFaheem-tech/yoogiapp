@@ -31,7 +31,7 @@ router.delete(
   collectionController.removeCollectionFromGroup
 );
 router.get(
-  "/collections/:filterType",
+  "/groups/:groupId/collection",
   auth,
   collectionController.collectionFiltering
 );

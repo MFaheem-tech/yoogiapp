@@ -4,6 +4,7 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import { config } from "dotenv";
 import connect from "./src/db/index.js";
+import bodyParser from "body-parser";
 import Router from "./src/router/index.js";
 import { errorHandler } from "./src/middleware/errorHandler.js";
 
@@ -33,6 +34,7 @@ const app = express();
 app.use(morgan("dev"));
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.text({ type: "text/plain" }));
 app.use(express.urlencoded({ extended: false }));
 
 const port = process.env.PORT || 5000;

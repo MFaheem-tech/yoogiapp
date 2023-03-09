@@ -1,6 +1,12 @@
 import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
+const textSchema = new mongoose.Schema({
+  textData: {
+    type: String,
+    required: true,
+  },
+});
 
 const FileSchema = new Schema(
   {
@@ -40,4 +46,7 @@ const FileSchema = new Schema(
 );
 
 const File = mongoose.model("File", FileSchema);
-export default File;
+const TextFile = File.discriminator("text", textSchema);
+// export default File;
+
+export { File, TextFile };
