@@ -877,6 +877,42 @@ paths:
       responses:
         default:
           description: successful operation
+  /collections/collection/groups:
+    get:
+      tags:
+        - CUSTOMER
+      summary: Filter collections based on groups or a specific group.
+      description: Returns a list of collections that are associated with the specified group(s).
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: groupId
+          in: query
+          description: The ID of the group to filter collections by.
+          required: false
+          schema:
+            type: string
+            example: 631b0b88970b8b1d149f61d6
+        - name: filterType
+          in: query
+          description: Specifies how to filter the collections. Possible values are "sharedFromMe" and "sharedToMe".
+          required: false
+          schema:
+            type: string
+            example: sharedFromMe
+      responses:
+        "200":
+          description: A list of collections that meet the specified criteria.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Collection"
+        "403": # status code
+          description: UnAuthorized Acess Denied
+      security:
+        - BearerAuth: []
   /collections/collection/{id}:
     put:
       tags:
