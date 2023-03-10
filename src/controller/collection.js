@@ -62,6 +62,21 @@ export default {
       return res.status(500).send({ error: error.message });
     }
   },
+  getSpecificGroupCollection: async (req, res) => {
+    try {
+      const groupId = req.params.id;
+
+      const group = await Group.findById(groupId).populate("collections");
+
+      if (!group) {
+        return res.status(404).json({ message: "Group not found" });
+      }
+
+      res.json(group.collections);
+    } catch (error) {
+      return res.status(500).send({ error: error.message });
+    }
+  },
 
   recentCollection: async (req, res) => {
     const userId = req.user.user_id;
@@ -360,49 +375,6 @@ export default {
 
     return res.status(200).send(collections);
   },
-
-  // collectionFiltering: async (req, res) => {
-  //   const userId = req.user.user_id;
-  //   const { groupId } = req.params;
-  //   const { filterType } = req.query;
-
-  //   let groups;
-  //   if (groupId) {
-  //     const group = await Group.findOne({ _id: groupId, addMember: userId });
-  //     if (!group) {
-  //       return res
-  //         .status(404)
-  //         .send({ msg: "Group not found or user is not a member" });
-  //     }
-  //     groups = [group];
-  //   } else {
-  //     groups = await Group.find({ addMember: userId });
-  //   }
-
-  //   const collections = [];
-  //   for (const group of groups) {
-  //     let groupCollections;
-  //     if (filterType === "sharedFromMe") {
-  //       groupCollections = await Collection.find({
-  //         _id: { $in: group.collections },
-  //         collectionOwner: userId,
-  //         share: true,
-  //       });
-  //     } else if (filterType === "sharedToMe") {
-  //       groupCollections = await Collection.find({
-  //         _id: { $in: group.collections },
-  //         shareCollection: userId,
-  //       });
-  //     } else {
-  //       groupCollections = await Collection.find({
-  //         _id: { $in: group.collections },
-  //       });
-  //     }
-  //     collections.push(...groupCollections);
-  //   }
-
-  //   return res.status(200).send(collections);
-  // },
 
   editCollection: async (req, res) => {
     try {

@@ -716,6 +716,23 @@ paths:
                 $ref: "#/components/schemas/Collection"
         "400": # status code
           description: UnAuthorized Access Denied
+  /collections/specific-group-collections/{id}:
+    get:
+      tags:
+        - CUSTOMER
+      summary: View all collections from specific group.
+      description: call this api to view all collections from specific group by id.
+      parameters:
+        - name: id
+          in: path
+          description: id is required
+          required: true
+          schema:
+            type: string
+            example: 631b0b88970b8b1d149f61d6
+      responses:
+        default:
+          description: successful operation
   /collections/recent-collection:
     get:
       tags:

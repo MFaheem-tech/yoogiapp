@@ -14,6 +14,10 @@ router.post(
   collectionController.removeSharedMembers
 );
 router.get("/view-collections", collectionController.viewCollection);
+router.get(
+  "/specific-group-collections/:id",
+  collectionController.getSpecificGroupCollection
+);
 router.get("/recent-collection", auth, collectionController.recentCollection);
 router.get("/share-from-me", auth, collectionController.ShareFromMe);
 router.get("/share-to-me", auth, collectionController.ShareToMe);
