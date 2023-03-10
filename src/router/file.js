@@ -16,5 +16,7 @@ router.delete(
   auth,
   fileController.removeFileFromCollection
 );
+router.get("/view-trash-file", auth, fileController.viewTrashFiles);
+router.delete("/move-trash/:id", auth, fileController.trashFile);
 
 export default router;

@@ -72,6 +72,7 @@ export default {
     try {
       const recent = await File.find({
         fileOwner: userId,
+        status: "active",
       })
         .sort({ createdAt: "desc" })
         .limit(10)
@@ -166,6 +167,49 @@ export default {
       return res.status(200).json({ msg: "File removed from collection" });
     } catch (error) {
       return res.status(500).send({ error: error.message });
+    }
+  },
+  viewTrashFiles: async (req, res) => {
+    try {
+      // get the current user id from the request
+      const currentUserId = req.user.user_id;
+
+      // find all files that belong to the current user and have status set to "deleted"
+      const files = await File.find({
+        fileOwner: currentUserId,
+        status: "deleted",
+      });
+
+      res.status(200).json(files);
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  },
+  trashFile: async (req, res) => {
+    try {
+      // get the current user id from the request
+      const currentUserId = req.user.user_id;
+
+      // find the file by id and owner
+      const file = await File.findOneAndUpdate(
+        { _id: req.params.id, fileOwner: currentUserId },
+        {
+          status: "deleted",
+          deletedAt: new Date(),
+        },
+        { new: true }
+      );
+
+      // if the file doesn't exist or doesn't belong to the current user, return an error
+      if (!file) {
+        return res.status(404).json({
+          message:
+            "The file could not be found or does not belong to the current user.",
+        });
+      }
+      res.status(200).json({ message: "The file has been moved to trash." });
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
     }
   },
 };

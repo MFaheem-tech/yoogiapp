@@ -1058,6 +1058,47 @@ paths:
       responses:
         default:
           description: successful operation
+  /files/view-trash-file:
+    get:
+      tags:
+        - CUSTOMER
+      summary: Get all files in trash.
+      description: Retrieve a list of all files that have been moved to trash by the current user. .
+      responses:
+        "200": # status code
+          description: A list of files in trash.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/File"
+        "400": # status code
+          description: UnAuthorized Access Denied
+      security:
+        - BearerAuth: []
+  /files/move-trash/{id}:
+    delete:
+      tags:
+        - CUSTOMER
+      summary: Move file to trash
+      description: Move the file with the specified ID to trash. The file will be marked as "deleted" and will be available for 30 days until being permanently removed.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The ID of the file to move to trash.
+      responses:
+        "200": # status code
+          description: The file has been moved to trash
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/File"
+        "400": # status code
+          description: UnAuthorized Access Denied
+      security:
+        - BearerAuth: []
   /files/collection/{collectionId}/file/{fileId}:
     delete:
       tags:

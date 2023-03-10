@@ -287,6 +287,7 @@ export default {
         // .populate({ path: "addMember", select: "-password" })
         .populate({
           path: "files",
+          match: { status: "active" },
           populate: [
             { path: "fileOwner", select: "-password" },
             { path: "where" },
