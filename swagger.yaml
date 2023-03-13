@@ -1075,6 +1075,40 @@ paths:
           description: UnAuthorized Access Denied
       security:
         - BearerAuth: []
+  /files/search-file:
+    get:
+      tags: 
+        - CUSTOMER
+      summary: Search files by period, tags, or fileType for the current user
+      parameters:
+        - in: query
+          name: period
+          schema:
+            type: string
+          description: The period to search for files within. Can be one of 'today', 'lastWeek', or 'lastMonth'.
+        - in: query
+          name: tags
+          schema:
+            type: string
+          description: A comma-separated list of tags to search for.
+        - in: query
+          name: fileType
+          schema:
+            type: string
+          description: The type of file to search for.
+      responses:
+        '200':
+          description: A list of files that match the search criteria.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/File'
+        '500':
+          description: An error occurred while processing the request.
+      security:
+        - BearerAuth: [] 
   /files/move-trash/{id}:
     delete:
       tags:

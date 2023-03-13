@@ -9,6 +9,7 @@ const router = Router();
 router.post("/add-file", fileController.addFile);
 router.post("/add-text", fileController.textFile);
 router.get("/recent-file", auth, fileController.recentFile);
+router.get("/search-file", auth, fileController.searchFiles);
 router.put("/move-file", fileController.moveFile);
 
 router.delete(

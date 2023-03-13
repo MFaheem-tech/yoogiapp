@@ -10,6 +10,7 @@ import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { sendEmailNow } from "../helper/sendEmail.js";
 import mongoose from "mongoose";
+import moment from "moment/moment.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -83,6 +84,52 @@ export default {
       res.status(200).json(recent);
     } catch (error) {
       return res.status(500).json({ error: error.message });
+    }
+  },
+  searchFiles: async (req, res) => {
+    const period = req.query.period;
+    const tags = req.query.tags;
+    const fileType = req.query.fileType;
+
+    let startDate, endDate;
+
+    switch (period) {
+      case "today":
+        startDate = moment().startOf("day");
+        endDate = moment().endOf("day");
+        break;
+      case "lastWeek":
+        startDate = moment().subtract(1, "week").startOf("week");
+        endDate = moment().subtract(1, "week").endOf("week");
+        break;
+      case "lastMonth":
+        startDate = moment().subtract(1, "month").startOf("month");
+        endDate = moment().subtract(1, "month").endOf("month");
+        break;
+      // Add more cases for different periods
+    }
+
+    const userId = req.user.user_id; // Get the current user's ID
+    const query = { fileOwner: userId }; // Only search for files belonging to the current user
+
+    if (tags) {
+      query.tags = { $in: tags.split(",") };
+    }
+
+    if (fileType) {
+      query.fileType = fileType;
+    }
+
+    if (startDate && endDate) {
+      query.createdAt = { $gte: startDate.toDate(), $lte: endDate.toDate() };
+    }
+
+    try {
+      const files = await File.find(query).populate("tags");
+      res.json(files);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("An error occurred");
     }
   },
   moveFile: async (req, res) => {
