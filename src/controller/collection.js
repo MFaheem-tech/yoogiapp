@@ -66,7 +66,16 @@ export default {
     try {
       const groupId = req.params.id;
 
-      const group = await Group.findById(groupId).populate("collections");
+      const group = await Group.findById(groupId)
+        .populate({
+          path: "collections",
+          populate: [
+            { path: "collectionOwner", select: "-password" },
+            { path: "shareCollection", select: "-password" },
+            { path: "tags" },
+          ],
+        })
+        .exec();
 
       if (!group) {
         return res.status(404).json({ message: "Group not found" });
