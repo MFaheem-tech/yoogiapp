@@ -292,14 +292,16 @@ export default {
       const collectionId = req.params.id;
       const collection = await Collection.findById(collectionId)
         .populate({ path: "collectionOwner", select: "-password" })
-        // .populate({ path: "groupMaker", select: "-password" })
-        // .populate({ path: "addMember", select: "-password" })
         .populate({
           path: "files",
           match: { status: "active" },
           populate: [
             { path: "fileOwner", select: "-password" },
-            { path: "where" },
+            {
+              path: "where",
+              select: "-password",
+              populate: { path: "collectionOwner", select: "-password" },
+            },
             { path: "tags" },
           ],
         });
