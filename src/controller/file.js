@@ -78,7 +78,11 @@ export default {
         .sort({ createdAt: "desc" })
         .limit(10)
         .populate({ path: "fileOwner", select: "-password" })
-        .populate({ path: "where", select: "-password" })
+        .populate({
+          path: "where",
+          select: "-password",
+          populate: { path: "collectionOwner", select: "-password" },
+        })
         .populate({ path: "tags" })
         .exec();
       res.status(200).json(recent);
